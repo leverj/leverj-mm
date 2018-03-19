@@ -1,0 +1,30 @@
+{
+  "name": "leverj-mm",
+  "version": "0.0.1",
+  "description": "Leverj  Market Maker",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/leverj/leverj-mm.git"
+  },
+  "keywords": [
+    "market maker",
+    "leverj",
+    "trading",
+    "simulation"
+  ],
+  "author": "Leverj",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/leverj/leverj-mm/issues"
+  },
+  "homepage": "https://github.com/leverj/leverj-mm#readme",
+  "dependencies": {
+    "leverj-common": "0.0.3",
+    "lodash": "^4.17.5",
+    "rest.js": "^0.2.1",
+    "zka": "0.0.2"
+  }
+}
