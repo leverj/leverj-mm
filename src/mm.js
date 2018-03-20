@@ -17,9 +17,8 @@ module.exports = (async function () {
     leverjConfig  = allConfig.config
     instruments   = allConfig.instruments
     listen()
-    setInterval(periodicReadOKX, 10000)
-    setInterval(cancelOrders, 20000)
-    // periodicReadOKX().catch(console.error)
+    setInterval(periodicReadOKX, config.createInterval)
+    setInterval(cancelOrders, config.cancelInterval)
   }
 
   async function periodicReadOKX() {
@@ -59,8 +58,8 @@ module.exports = (async function () {
 
   async function cancelOrders() {
     let orderList = await zka.rest.get('/order')
-    if (orderList.length > 30) {
-      let toBeRemoved = orderList.slice(15)
+    if (orderList.length > config.max) {
+      let toBeRemoved = orderList.slice(config.min)
       await zka.rest.patch("/order", {}, [{op:'remove',value: toBeRemoved.map(order=>order.uuid)}])
     }
   }
