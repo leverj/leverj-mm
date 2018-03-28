@@ -3,6 +3,8 @@ const zka    = require("zka")(config.baseUrl, "/api/v1")
 const rest   = require('rest.js')
 const orderAuthenticator = require("leverj-common/OrderAuthentication")
 const _      = require('lodash')
+const util = require('util')
+const debuglog = util.debuglog('leverj-mm')
 
 module.exports = (async function () {
   let instruments  = {}
@@ -11,13 +13,17 @@ module.exports = (async function () {
   let orders       = {}
 
   async function start() {
+    debuglog("config:", config)
     zka.init(config.accountId, config.apiKey, config.secret)
+    debuglog("zka initialized with accountId:", config.accountId, "apiKey:", config.apiKey, "secret:", config.secret)
     zka.socket.register()
     let allConfig = await zka.rest.get('/all/config')
     leverjConfig  = allConfig.config
     instruments   = allConfig.instruments
     listen()
+    debuglog("order created every", config.createInterval, "milliseconds")
     setInterval(periodicReadOKX, config.createInterval)
+    debuglog("order cancelled every", config.cancelInterval, "milliseconds")
     setInterval(cancelOrders, config.cancelInterval)
   }
 
@@ -25,10 +31,12 @@ module.exports = (async function () {
     if (readOnly) return
     try {
       let okx  = (await rest.get("https://www.okex.com/api/v1/depth.do?symbol=lev_eth")).body
-      let bid  = okx.bids[0][0]
-      let ask  = okx.asks[okx.asks.length - 1][0]
+      let bid  = okx.bids[0][0] // highest bid, top of the book
+      let ask  = okx.asks[okx.asks.length - 1][0] // lowest ask, top of the book
       let buy  = newOrder('buy', applyRange(bid, 0.00001), applyRange(6, 1))
       let sell = newOrder('sell', applyRange(ask, 0.00001), applyRange(6, 1))
+      debuglog(buy)
+      debuglog(sell)
       zka.rest.post('/order', {}, [buy, sell]).catch(console.error)
     } catch (e) {
       console.error(e)

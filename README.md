@@ -9,6 +9,11 @@ $ npm install
 $ BASE_URL=https://live-dev.leverj.io node src/mm.js </path/to/secret/file.json>
 ```
 
+### debug module
+```bash
+$ BASE_URL=https://live-dev.leverj.io NODE_DEBUG=leverj-mm node src/mm.js </path/to/secret/file.json>
+```
+
 ### using docker image
 ```bash
 docker run -d --name mm -v </path/to/directory/of/secret/file>:/privateKey -e BASE_URL=https://live-dev.leverj.io leverj/leverj-mm:develop node src/mm.js /privateKey/<secretFile.json
