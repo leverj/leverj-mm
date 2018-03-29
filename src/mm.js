@@ -19,22 +19,30 @@ module.exports = (async function () {
     zka.socket.register()
     let allConfig = await zka.rest.get('/all/config')
     leverjConfig  = allConfig.config
+    debuglog("leverjConfig", leverjConfig)
     instruments   = allConfig.instruments
+    debuglog("instruments", instruments)
     listen()
-    debuglog("order created every", config.createInterval, "milliseconds")
-    setInterval(periodicReadOKX, config.createInterval)
-    debuglog("order cancelled every", config.cancelInterval, "milliseconds")
-    setInterval(cancelOrders, config.cancelInterval)
+    for (var i=0; i < config.symbols.length; i++) {
+      debuglog("order created every", config.createInterval, "milliseconds")
+      let symbol_leverj = config.symbols[i]
+      let symbol_okex = config.exchangeSymbolMap["okex"][symbol_leverj]
+      debuglog(symbol_leverj, symbol_okex)
+      setInterval(function() { periodicReadOKX(symbol_leverj, symbol_okex); }, config.createInterval)
+      debuglog("order cancelled every", config.cancelInterval, "milliseconds")
+      setInterval(cancelOrders, config.cancelInterval)
+    }
   }
 
-  async function periodicReadOKX() {
+  async function periodicReadOKX(symbol_leverj, symbol_okx) {
+    debuglog("symbol_leverj", symbol_leverj, "symbol_okx", symbol_okx)
     if (readOnly) return
     try {
-      let okx  = (await rest.get("https://www.okex.com/api/v1/depth.do?symbol=lev_eth")).body
+      let okx  = (await rest.get("https://www.okex.com/api/v1/depth.do?symbol="+symbol_okx)).body
       let bid  = okx.bids[0][0] // highest bid, top of the book
       let ask  = okx.asks[okx.asks.length - 1][0] // lowest ask, top of the book
-      let buy  = newOrder('buy', applyRange(bid, 0.00001), applyRange(6, 1))
-      let sell = newOrder('sell', applyRange(ask, 0.00001), applyRange(6, 1))
+      let buy  = newOrder(symbol_leverj, 'buy', applyRange(bid, 0.00001), applyRange(6, 1))
+      let sell = newOrder(symbol_leverj, 'sell', applyRange(ask, 0.00001), applyRange(6, 1))
       debuglog(buy)
       debuglog(sell)
       zka.rest.post('/order', {}, [buy, sell]).catch(console.error)
@@ -49,18 +57,18 @@ module.exports = (async function () {
     return number + sign * randomRange
   }
 
-  function newOrder(side, price, quantity) {
+  function newOrder(symbol_leverj, side, price, quantity) {
     let order       = {
       orderType : 'LMT',
       side,
-      price     : price.toFixed(instrument().significantEtherDigits) - 0,
-      quantity  : quantity.toFixed(instrument().significantTokenDigits) - 0,
+      price     : price.toFixed(instrument(symbol_leverj).significantEtherDigits) - 0,
+      quantity  : quantity.toFixed(instrument(symbol_leverj).significantTokenDigits) - 0,
       timestamp : Date.now(),
       accountId : config.accountId,
-      token     : instrument().address,
-      instrument: instrument().symbol
+      token     : instrument(symbol_leverj).address,
+      instrument: instrument(symbol_leverj).symbol
     }
-    order.signature = orderAuthenticator.sign(order, instrument().decimals, config.secret)
+    order.signature = orderAuthenticator.sign(order, instrument(symbol_leverj).decimals, config.secret)
     return order
   }
 
@@ -73,8 +81,8 @@ module.exports = (async function () {
   }
 
 
-  function instrument() {
-    return instruments[config.symbol]
+  function instrument(symbol_leverj) {
+    return instruments[symbol_leverj]
   }
 
   function listen() {
@@ -113,7 +121,7 @@ module.exports = (async function () {
   }
 
   function myMessageReceived(data) {
-    orders = data.orders && data.orders[config.symbol] || orders
+    orders = data.orders && data.orders[config.symbols[1]] || orders
   }
 
   function onNtp(data) {

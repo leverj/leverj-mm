@@ -8,10 +8,16 @@ module.exports = (function () {
     accountId: secret.accountId,
     apiKey : secret.apiKey,
     secret : secret.secret,
-    symbol : 'LEVETH',
+    symbols : ['LEVETH', 'ETHUSDT'],
     max: process.env.MAX || 30,
     min: process.env.MIN || 15,
-    createInterval: (process.env.CREATE_INTERVAL || 30)*1000,
-    cancelInterval: (process.env.CANCEL_INTERVAL || 40)*1000,
+    createInterval: (process.env.CREATE_INTERVAL || 3)*1000,
+    cancelInterval: (process.env.CANCEL_INTERVAL || 4)*1000,
+    exchangeSymbolMap : {
+      "okex" : {
+        "LEVETH" : "lev_eth",
+        "ETHUSDT" : "eth_usdt",
+      },
+    },
   }
 })()
