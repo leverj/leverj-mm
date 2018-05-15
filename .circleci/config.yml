@@ -9,17 +9,13 @@ jobs:
       - image: circleci/node:8.11.1
     steps:
       - checkout
-      - run:
-          name: install dependencies
-          command: npm install
+      - run: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
+      - run: npm install
       - setup_remote_docker:
           docker_layer_caching: true
-      - run:
-          name: docker image
-          command: |
-            docker info
-            docker build -t leverj/leverj-mm:$CIRCLE_BRANCH .
-            docker login -u $DOCKER_USER -p $DOCKER_PASS
-            docker push leverj/leverj-mm
-
-
+      - run: docker info
+      - run: docker build --build-arg NPM_TOKEN=$NPM_TOKEN -t leverj/leverj-mm:$CIRCLE_BRANCH .
+      - run: docker login -u $DOCKER_USER -p $DOCKER_PASS
+      - run: docker push leverj/leverj-mm
+      - run: docker logout
+      - run: rm -f ~/.npmrc
