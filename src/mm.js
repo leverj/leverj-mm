@@ -1,7 +1,7 @@
 const config = require("./dev-config")
 const zka    = require("zka")(config.baseUrl, "/api/v1")
 const rest   = require('rest.js')
-const orderAuthenticator = require("leverj-common/OrderAuthentication")
+const orderAuthenticator = require("@leverj/leverj-common/OrderAuthentication")
 const _      = require('lodash')
 
 module.exports = (async function () {
