@@ -1,8 +1,8 @@
-const config = require("./dev-config")
-const zka    = require("zka")(config.baseUrl, "/api/v1")
-const rest   = require('rest.js')
+const config             = require("./dev-config")
+const zka                = require("zka")(config.baseUrl, "/api/v1")
+const rest               = require('rest.js')
 const orderAuthenticator = require("@leverj/leverj-common/OrderAuthentication")
-const _      = require('lodash')
+const _                  = require('lodash')
 
 module.exports = (async function () {
   let instruments  = {}
@@ -11,6 +11,7 @@ module.exports = (async function () {
   let orders       = {}
 
   async function start() {
+    printConfig()
     zka.init(config.accountId, config.apiKey, config.secret)
     zka.socket.register()
     let allConfig = await zka.rest.get('/all/config')
@@ -58,9 +59,10 @@ module.exports = (async function () {
 
   async function cancelOrders() {
     let orderList = await zka.rest.get('/order')
+    console.log(orderList.length)
     if (orderList.length > config.max) {
-      let toBeRemoved = orderList.slice(config.min)
-      await zka.rest.patch("/order", {}, [{op:'remove',value: toBeRemoved.map(order=>order.uuid)}])
+      let toBeRemoved = orderList.slice(config.min, config.min+100)
+      await zka.rest.patch("/order", {}, [{op: 'remove', value: toBeRemoved.map(order => order.uuid)}])
     }
   }
 
@@ -117,6 +119,11 @@ module.exports = (async function () {
   function doNothing() {
   }
 
+  function printConfig() {
+    let config1    = Object.assign({}, config)
+    config1.secret = "##############################"
+    console.log(config1)
+  }
 
   start().catch(console.error)
 })().catch(console.error)
