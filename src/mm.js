@@ -28,8 +28,8 @@ module.exports = (async function () {
       let okx  = (await rest.get("https://www.okex.com/api/v1/depth.do?symbol=lev_eth")).body
       let bid  = okx.bids[0][0]
       let ask  = okx.asks[okx.asks.length - 1][0]
-      let buy  = newOrder('buy', applyRange(bid, 0.00001), applyRange(6, 1))
-      let sell = newOrder('sell', applyRange(ask, 0.00001), applyRange(6, 1))
+      let buy  = newOrder('buy', applyRange(bid, config.priceRange), applyRange(6, 1))
+      let sell = newOrder('sell', applyRange(ask, config.priceRange), applyRange(6, 1))
       zka.rest.post('/order', {}, [buy, sell]).catch(console.error)
     } catch (e) {
       console.error(e)

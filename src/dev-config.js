@@ -9,8 +9,9 @@ module.exports = (function () {
     apiKey : secret.apiKey,
     secret : secret.secret,
     symbol : 'LEVETH',
-    max: process.env.MAX || 30,
-    min: process.env.MIN || 15,
+    max: (process.env.MAX || 30) - 0,
+    min: (process.env.MIN || 15) - 0,
+    priceRange: (process.env.PRICE_RANGE || 0.00001) - 0,
     createInterval: (process.env.CREATE_INTERVAL || 30)*1000,
     cancelInterval: (process.env.CANCEL_INTERVAL || 40)*1000,
   }
