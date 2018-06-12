@@ -22,7 +22,7 @@
   },
   "homepage": "https://github.com/leverj/leverj-mm#readme",
   "dependencies": {
-    "@leverj/leverj-common": "^0.0.5",
+    "@leverj/leverj-common": "^0.0.6",
     "lodash": "^4.17.5",
     "rest.js": "^0.2.1",
     "zka": "0.0.2"
