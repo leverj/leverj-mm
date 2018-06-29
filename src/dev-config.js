@@ -14,6 +14,6 @@ module.exports = (function () {
     priceRange    : (process.env.PRICE_RANGE || 0.00001) - 0,
     createInterval: (process.env.CREATE_INTERVAL || 30) * 1000,
     cancelInterval: (process.env.CANCEL_INTERVAL || 40) * 1000,
-    quantity      : (process.env.QUANTITY || 1) - 0,
+    quantity      : (process.env.QUANTITY || 0.1) - 0,
   }
 })()

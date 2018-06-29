@@ -48,7 +48,7 @@ module.exports = (async function () {
       side,
       price     : price.toFixed(instrument().significantEtherDigits) - 0,
       quantity  : quantity.toFixed(instrument().significantTokenDigits) - 0,
-      timestamp : Date.now(),
+      timestamp : Date.now() * 1e3,
       accountId : config.accountId,
       token     : instrument().address,
       instrument: instrument().symbol
@@ -61,7 +61,7 @@ module.exports = (async function () {
     let orderList = await zka.rest.get('/order')
     console.log(orderList.length)
     if (orderList.length > config.max) {
-      let toBeRemoved = orderList.slice(config.min, config.min+100)
+      let toBeRemoved = orderList.slice(config.min, config.min + 100)
       await zka.rest.patch("/order", {}, [{op: 'remove', value: toBeRemoved.map(order => order.uuid)}])
     }
   }
