@@ -55,11 +55,19 @@ module.exports = (async function () {
     let order = {
       orderType: 'LMT',
       side,
+<<<<<<< HEAD
       price: price.toFixed(instrument().significantEtherDigits) - 0,
       quantity: quantity.toFixed(instrument().significantTokenDigits) - 0,
       timestamp: Date.now(),
       accountId: config.accountId,
       token: instrument().address,
+=======
+      price     : price.toFixed(instrument().significantEtherDigits) - 0,
+      quantity  : quantity.toFixed(instrument().significantTokenDigits) - 0,
+      timestamp : Date.now() * 1e3,
+      accountId : config.accountId,
+      token     : instrument().address,
+>>>>>>> 484a4150b7a48f0ebb2c95817618b83277be87b4
       instrument: instrument().symbol
     }
     order.signature = orderAuthenticator.sign(order, instrument().decimals, config.secret)
@@ -71,7 +79,11 @@ module.exports = (async function () {
     console.log(orderList.length)
     if (orderList.length > config.max) {
       let toBeRemoved = orderList.slice(config.min, config.min + 100)
+<<<<<<< HEAD
       await zka.rest.patch("/order", {}, [{ op: 'remove', value: toBeRemoved.map(order => order.uuid) }])
+=======
+      await zka.rest.patch("/order", {}, [{op: 'remove', value: toBeRemoved.map(order => order.uuid)}])
+>>>>>>> 484a4150b7a48f0ebb2c95817618b83277be87b4
     }
   }
 
