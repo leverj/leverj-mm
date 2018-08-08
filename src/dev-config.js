@@ -8,7 +8,7 @@ module.exports = (function () {
     accountId     : secret.accountId,
     apiKey        : secret.apiKey,
     secret        : secret.secret,
-    symbol        : 'LEVETH',
+    symbol        : process.env.SYMBOL || 'LEVETH',
     max           : (process.env.MAX || 30) - 0,
     min           : (process.env.MIN || 15) - 0,
     priceRange    : (process.env.PRICE_RANGE || 0.00001) - 0,
