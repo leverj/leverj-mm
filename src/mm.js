@@ -39,9 +39,8 @@ module.exports = (async function () {
   async function periodicReadOKX() {
     if (readOnly) return
     try {
-      let okx  = (await rest.get("https://www.okex.com/api/v1/depth.do?symbol=lev_eth")).body
-      let bid  = okx.bids[0][0]
-      let ask  = okx.asks[okx.asks.length - 1][0]
+      let bid  = 0.0009
+      let ask  = 0.0011
       let buy  = newOrder('buy', applyRange(bid, config.priceRange), config.quantity)
       let sell = newOrder('sell', applyRange(ask, config.priceRange), config.quantity)
       zka.rest.post('/order', {}, [buy, sell]).catch(console.error)
