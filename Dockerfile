@@ -1,4 +1,4 @@
-FROM coinpit/nodejs:v8.11.1
+FROM coinpit/nodejs:v10.12.0
 ARG NPM_TOKEN
 COPY . ./dist
 RUN apt-get update && \
