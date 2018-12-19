@@ -10,7 +10,7 @@ jobs:
     steps:
       - checkout
       - run: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
-      - run: npm install -g yarn
+      - run: sudo npm install -g yarn
       - run: yarn install --frozen-lockfile
       - setup_remote_docker:
           docker_layer_caching: true
