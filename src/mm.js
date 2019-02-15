@@ -24,6 +24,7 @@ module.exports = (async function () {
     leverjConfig = allConfig.config
     instruments = allConfig.instruments
     listen()
+    await setLastPriceAndSide()
     strategy[config.strategy]()
   }
 
@@ -43,11 +44,7 @@ module.exports = (async function () {
     return order
   }
 
-// collar strategy ##########################################################################################
-  let collarWorking, lastPrice, lastSide
-
-  async function doCollarStrategy() {
-    collarStrategy.setConfig(config)
+  async function setLastPriceAndSide(){
     const executions = await zka.rest.get(`/account/${config.symbol}/execution`)
     if (executions.length) {
       lastSide = executions[0].side
@@ -56,13 +53,20 @@ module.exports = (async function () {
       lastSide = config.startSide
       lastPrice = config.startPrice
     }
-    setInterval(removeAndAddOrders, 1000)
+  }
+// collar strategy ##########################################################################################
+  let collarWorking, lastPrice, lastSide
+
+  async function doCollarStrategy() {
+    collarStrategy.setConfig(config)
+    setInterval(removeAndAddOrders, 20000)
   }
 
 
   function onExecution(accountExecution) {
     lastPrice = accountExecution.price
     lastSide = accountExecution.side
+    if(config.strategy === "COLLAR") removeAndAddOrders().catch(console.error)
   }
 
   async function removeAndAddOrders() {
@@ -177,8 +181,8 @@ module.exports = (async function () {
   async function createRandomOrders() {
     if (readOnly) return
     try {
-      let bid = 0.0009
-      let ask = 0.0011
+      let bid = lastPrice - config.spread/2
+      let ask = lastPrice + config.spread/2
       let buy = newOrder('buy', applyRange(bid, config.priceRange), config.quantity)
       let sell = newOrder('sell', applyRange(ask, config.priceRange), config.quantity)
       zka.rest.post('/order', {}, [buy, sell]).catch(console.error)
