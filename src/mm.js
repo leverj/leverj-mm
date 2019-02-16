@@ -6,6 +6,7 @@ const _ = require('lodash')
 const collarStrategy = require('./collarStrategy')
 
 module.exports = (async function () {
+  const SKEW = 0.2
   let instruments = {}
   let leverjConfig = {}
   let readOnly = false
@@ -181,14 +182,26 @@ module.exports = (async function () {
   async function createRandomOrders() {
     if (readOnly) return
     try {
-      let bid = lastPrice - config.spread/2
-      let ask = lastPrice + config.spread/2
-      let buy = newOrder('buy', applyRange(bid, config.priceRange), config.quantity)
-      let sell = newOrder('sell', applyRange(ask, config.priceRange), config.quantity)
+      let bid = randomPrice(lastPrice)
+      let ask = randomPrice(lastPrice)
+      let buy = newOrder('buy', applyRange(bid, config.priceRange), randomQty(config.quantity))
+      let sell = newOrder('sell', applyRange(ask, config.priceRange), randomQty(config.quantity))
       zka.rest.post('/order', {}, [buy, sell]).catch(console.error)
     } catch (e) {
       console.error(e)
     }
+  }
+
+  function randomPrice(price) {
+    let sign = Math.random() < 0.5 ? -1 : +1
+    let delta = price * (1 + sign * Math.random() * SKEW)
+    delta = Math.round(delta * 1000000)/1000000
+    return delta
+  }
+
+  function randomQty(qty) {
+    let sign = Math.random() < 0.5 ? -1 : +1
+    return Math.round(qty * (1 + sign * Math.random() * 2 * SKEW))
   }
 
   function applyRange(number, range) {

@@ -9,5 +9,5 @@ RUN apt-get update && \
     useradd leverj && \
     apt-get remove -y curl git && \
     rm -rf /var/lib/apt/lists/* ; rm -f ~/.npmrc
-USER leverj
+#USER leverj
 WORKDIR dist
