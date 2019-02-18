@@ -1,4 +1,4 @@
-const config = require("./dev-config")
+const config = require("./config")
 const zka = require("zka")(config.baseUrl, "/api/v1")
 const rest = require('rest.js')
 const orderAuthenticator = require("@leverj/leverj-common/OrderAuthentication")
@@ -45,7 +45,7 @@ module.exports = (async function () {
     return order
   }
 
-  async function setLastPriceAndSide(){
+  async function setLastPriceAndSide() {
     const executions = await zka.rest.get(`/account/${config.symbol}/execution`)
     if (executions.length) {
       lastSide = executions[0].side
@@ -55,19 +55,32 @@ module.exports = (async function () {
       lastPrice = config.startPrice
     }
   }
+
 // collar strategy ##########################################################################################
   let collarWorking, lastPrice, lastSide
 
   async function doCollarStrategy() {
     collarStrategy.setConfig(config)
-    setInterval(removeAndAddOrders, 20000)
+    setInterval(delayedRemoveAndAddOrders, 20000)
   }
 
 
   function onExecution(accountExecution) {
     lastPrice = accountExecution.price
     lastSide = accountExecution.side
-    if(config.strategy === "COLLAR") removeAndAddOrders().catch(console.error)
+    delayedRemoveAndAddOrders()
+  }
+
+  let collarTimer
+
+  function delayedRemoveAndAddOrders() {
+    try {
+      if (config.strategy !== "COLLAR") return
+      clearTimeout(collarTimer)
+      collarTimer = setTimeout(() => removeAndAddOrders().catch(console.error), 500)
+    } catch (e) {
+      console.error(e)
+    }
   }
 
   async function removeAndAddOrders() {
@@ -154,7 +167,7 @@ module.exports = (async function () {
   }
 
   function myMessageReceived(data) {
-    if(!data.accountDetails || !data.accountDetails.orders) return
+    if (!data.accountDetails || !data.accountDetails.orders) return
     orders = data.accountDetails.orders[config.symbol]
   }
 
@@ -195,7 +208,7 @@ module.exports = (async function () {
   function randomPrice(price) {
     let sign = Math.random() < 0.5 ? -1 : +1
     let delta = price * (1 + sign * Math.random() * SKEW)
-    delta = Math.round(delta * 1000000)/1000000
+    delta = Math.round(delta * 1000000) / 1000000
     return delta
   }
 
