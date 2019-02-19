@@ -47,13 +47,21 @@ module.exports = (async function () {
 
   async function setLastPriceAndSide() {
     const executions = await zka.rest.get(`/account/${config.symbol}/execution`)
-    if (executions.length) {
-      lastSide = executions[0].side
-      lastPrice = executions[0].price
-    } else {
-      lastSide = config.startSide
-      lastPrice = config.startPrice
-    }
+    if (executions.length)
+      setPriceAndSide(executions[0].price, executions[0].side)
+    else
+      setPriceAndSide(config.startPrice, config.startSide)
+  }
+
+  function formattedDate() {
+    let date = new Date()
+    return date.toJSON()
+  }
+
+  function setPriceAndSide(price, side) {
+    lastSide = side
+    lastPrice = price
+    console.log(formattedDate(), 'last price and side', price, side)
   }
 
 // collar strategy ##########################################################################################
@@ -66,8 +74,7 @@ module.exports = (async function () {
 
 
   function onExecution(accountExecution) {
-    lastPrice = accountExecution.price
-    lastSide = accountExecution.side
+    setPriceAndSide(accountExecution.price, accountExecution.side)
     delayedRemoveAndAddOrders()
   }
 
@@ -87,6 +94,7 @@ module.exports = (async function () {
     if (collarWorking) return
     collarWorking = true
     try {
+      console.log(formattedDate(), "removeAndAddOrders", lastPrice, lastSide )
       let {toBeAdded, toBeRemoved} = collarStrategy.getOrdersToBeAddedAndDeleted(Object.values(orders), lastPrice, lastSide);
       const newOrders = toBeAdded.map(each => newOrder(each.side, each.price, config.quantity))
       let patch = []
