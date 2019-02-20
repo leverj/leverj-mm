@@ -16,6 +16,7 @@ module.exports = (async function () {
     RANDOM: doRandomStrategy
   }
 
+  const toMakerSide = side => side === "buy" ? "sell" : "buy"
 
   async function start() {
     printConfig()
@@ -24,6 +25,11 @@ module.exports = (async function () {
     let allConfig = await zka.rest.get('/all/config')
     leverjConfig = allConfig.config
     instruments = allConfig.instruments
+    const allOrders = await zka.rest.get("/order")
+    allOrders.forEach(order => {
+      if(order.instrument === config.symbol)
+        orders[order.uuid] = order
+    })
     listen()
     await setLastPriceAndSide()
     strategy[config.strategy]()
@@ -59,7 +65,7 @@ module.exports = (async function () {
   }
 
   function setPriceAndSide(price, side) {
-    lastSide = side
+    lastSide = toMakerSide(side)
     lastPrice = price
     console.log(formattedDate(), 'last price and side', price, side)
   }
@@ -105,7 +111,10 @@ module.exports = (async function () {
       let patch = []
       if (toBeRemoved.length) patch.push({op: 'remove', value: toBeRemoved.map(order => order.uuid)})
       if (newOrders.length) patch.push({op: 'add', value: newOrders})
-      if (patch.length) await zka.rest.patch("/order", {}, patch)
+      if (patch.length) {
+        console.log(formattedDate(), "sending patch", "add", newOrders.map(order=> order.price), "remove", toBeRemoved.map(order => order.uuid))
+        await zka.rest.patch("/order", {}, patch)
+      }
     } catch (e) {
       console.error(e)
     }

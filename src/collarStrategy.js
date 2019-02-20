@@ -6,8 +6,6 @@ module.exports = function () {
   let config
   const BUY = "buy"
   const SELL = "sell"
-  const buySort = (a, b) => b.price - a.price
-  const sellSort = (a, b) => a.price - b.price
   const affirmPositive = (num, name) => affirm(!isNaN(num) && num > 0, `${name} must be positive number`)
   const action = (side) => side === BUY ? sinful.sub : sinful.add
 
@@ -18,82 +16,77 @@ module.exports = function () {
     config = _config
   }
 
-  fixed.getOrdersToBeAddedAndDeleted = function (orders, executionPrice, executionSide) {
+  fixed.getOrdersToBeAddedAndDeleted = function temp(orders, price, side) {
     affirm(config, "config is not set")
     affirm(Array.isArray(orders), "Orders must be an array: " + orders)
-    affirm(executionSide === BUY || executionSide === SELL, "Invalid executionSide: " + executionSide)
-    affirmPositive(executionPrice, "executionPrice")
-    const [buys, sells] = getBuyAndSellOrders(orders)
-    if (buys.length && executionSide === BUY && buys[0].price >= executionPrice) return padBook(buys, sells, executionPrice, executionSide)
-    if (sells.length && executionSide === SELL && sells[0].price <= executionPrice) return padBook(buys, sells, executionPrice, executionSide)
-    if (executionSide === BUY && buys.length && buys[0].price <= executionPrice) {
-      let price = sinful.add(buys[0].price, config.spread)
-      const toBeAdded = sells.length && sells[0].price > price ? [{side: SELL, price}] : undefined
-      return padBook(buys, sells, executionPrice, executionSide, toBeAdded)
-    }
-    if (executionSide === SELL && sells.length && sells[0].price >= executionPrice) {
-      let price = sinful.sub(sells[0].price, config.spread);
-      const toBeAdded = buys.length && buys[0].price < price ? [{side: BUY, price: price}] : undefined
-      return padBook(buys, sells, executionPrice, executionSide, toBeAdded)
-    }
-    return padBook(buys, sells, executionPrice, executionSide)
+    affirm(side === BUY || side === SELL, "Invalid side: " + side)
+    affirmPositive(price, "price")
+    const currentBook = getCurrentBook(orders)
+    const duplicates = getDuplicates(orders, currentBook)
+    const newBook = createNewBook(price, side)
+    const cancels = getCancels(currentBook, newBook)
+    const creates = getCreates(currentBook, newBook)
+    return {toBeAdded: creates, toBeRemoved: cancels.concat(duplicates)}
   }
 
-  function padBook(buys, sells, executionPrice, executionSide, toBeAdded = [], toBeRemoved = []) {
-    affirm(Array.isArray(buys), "buys must be an array")
-    affirm(Array.isArray(sells), "sells must be an array")
-    affirmPositive(executionPrice, "executionPrice")
-    affirm(executionSide === BUY || executionSide === SELL, "Invalid executionSide: " + executionSide)
-    affirm(Array.isArray(toBeAdded), "toBeAdded must be an array")
-    affirm(Array.isArray(toBeRemoved), "toBeRemoved must be an array")
-
-    const buyPads = pad(buys, BUY, executionPrice, executionSide)
-    const sellPads = pad(sells, SELL, executionPrice, executionSide)
-    return {
-      toBeAdded: toBeAdded.concat(buyPads.toBeAdded).concat(sellPads.toBeAdded),
-      toBeRemoved: toBeRemoved.concat(buyPads.toBeRemoved).concat(sellPads.toBeRemoved)
-    }
-  }
-
-
-  function pad(orders, side, executionPrice, executionSide) {
-    let toBeRemoved = []
-    let toBeAdded = []
-    const remaining = config.depth - orders.length
-    let price
-    if (orders.length) {
-      price = action(side)(orders[orders.length - 1].price, config.step)
-    } else {
-      const sellDiff = executionSide === SELL ? config.step : sinful.sub(config.spread, config.step)
-      const sellPrice = sinful.add(executionPrice, sellDiff)
-      const buyPrice = sinful.sub(sellPrice, config.spread)
-      price = side === BUY ? buyPrice : sellPrice
-    }
-    if (remaining > 0) {
-      toBeAdded = getBook(price, side, remaining)
-    } else if (remaining < 0) {
-      toBeRemoved = orders.slice(config.depth)
-    }
-    return {toBeAdded, toBeRemoved}
-  }
-
-
-  function getBuyAndSellOrders(orders) {
-    const buys = [], sells = []
+  function getDuplicates(orders, currentBook) {
+    const duplicates = []
     orders.forEach(order => {
-      if (order.side === BUY) buys.push(order)
-      else if (order.side === SELL) sells.push(order)
-      else throw new Error("Order does not have a side." + JSON.stringify(order))
+      if (currentBook[order.side][order.price] === order) return
+      duplicates.push(order)
     })
-    buys.sort(buySort)
-    sells.sort(sellSort)
-    return [buys, sells]
+    return duplicates
   }
 
-  function getBook(price, side, depth = config.depth) {
-    const book = []
+  function getCurrentBook(orders) {
+    affirm(Array.isArray(orders), 'orders must be an array')
+    const ordersBySide = {[BUY]: {}, [SELL]: {}}
+    orders.forEach(order => {
+      if (order.side === BUY) ordersBySide[BUY][order.price] = order
+      if (order.side === SELL) ordersBySide[SELL][order.price] = order
+    })
+    return ordersBySide
+  }
+
+  function createNewBook(price, side) {
+    affirmPositive(price, 'price')
+    const [buyPrice, sellPrice] = getNewPrice(price, side)
+    const buys = getBook(buyPrice, BUY)
+    const sells = getBook(sellPrice, SELL)
+    return {[BUY]: buys, [SELL]: sells}
+  }
+
+  function getNewPrice(price, side) {
+    const buyPrice = side === BUY ? sinful.sub(price, config.step) : sinful.sub(price, sinful.sub(config.spread, config.step))
+    const sellPrice = sinful.add(buyPrice, config.spread)
+    return [buyPrice, sellPrice]
+  }
+
+  function getCancels(currentBook, newBook) {
+    const d1 = subtract(currentBook[BUY], newBook[BUY])
+    const d2 = subtract(currentBook[SELL], newBook[SELL])
+    return d1.concat(d2)
+  }
+
+  function getCreates(currentBook, newBook) {
+    const d1 = subtract(newBook[BUY], currentBook[BUY])
+    const d2 = subtract(newBook[SELL], currentBook[SELL])
+    return d1.concat(d2)
+  }
+
+  function subtract(map1, map2) {
+    const difference = []
+    Object.keys(map1).forEach(key => {
+      if (!map2[key]) difference.push(map1[key])
+    })
+    return difference
+  }
+
+  function getBook(StartPrice, side, depth = config.depth) {
+    const book = {}
     for (let i = 0; i < depth; i++) {
-      book.push({side, price: action(side)(price, sinful.mul(i, config.step))})
+      let price = action(side)(StartPrice, sinful.mul(i, config.step));
+      book[price] = {side, price: price}
     }
     return book
   }
