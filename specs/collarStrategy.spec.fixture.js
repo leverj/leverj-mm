@@ -1,23 +1,27 @@
 module.exports = function () {
 
-  function getOrders(prices, side) {
-    return prices.map(price => {
-        return {
-          price, side,
-          orderType: 'LMT',
-          quantity: 1,
-          accountId: "0x10893fCC4EceEe9D269399baa77Ad595cCF8f13B",
-          token: "LEV",
-          instrument: "LEVETH"
-        }
-      }
-    )
+  function getOrders(buyPrices = [], sellPrices = []) {
+    return buyPrices.map(price => createOrder(price, "buy"))
+      .concat(sellPrices.map(price => createOrder(price, "sell")))
   }
 
-  function toObj(prices, side) {
-    return prices.map(price => {
-      return {price, side}
-    })
+  function createOrder(price, side) {
+    return {
+      price, side,
+      orderType: 'LMT',
+      quantity: 1,
+      accountId: "0x10893fCC4EceEe9D269399baa77Ad595cCF8f13B",
+      token: "LEV",
+      instrument: "LEVETH"
+    }
+  }
+
+  function toObj(buyPrices = [], sellPrices = []) {
+    return buyPrices.map(price => {
+      return {price, side: "buy"}
+    }).concat(sellPrices.map(price => {
+      return {price, side: "sell"}
+    }))
   }
 
   const config = {
@@ -28,89 +32,135 @@ module.exports = function () {
 
   const tests = [
     {
-      description: "should add buy and sell orders based on spread when orders are empty",
+      description: "0",
       orders: [],
       executionPrice: 8,
       executionSide: "sell",
-      result: {toBeRemoved: [], toBeAdded: toObj([7.7, 7.6, 7.5], "buy").concat(toObj([8.1, 8.2, 8.3], "sell"))}
+      result: {
+        toBeAdded: toObj([7.7, 7.6, 7.5], [8.1, 8.2, 8.3]),
+        toBeRemoved: []
+      }
     },
     {
-      description: "should return empty map if an order exists with sell execution price",
-      orders: getOrders([7.7, 7.6, 7.5], "buy").concat(getOrders([8.1, 8.2, 8.3], "sell")),
+      description: "1",
+      orders: getOrders([7.7, 7.6, 7.5], [8.1, 8.2, 8.3]),
       executionPrice: 8.1,
       executionSide: "sell",
-      result: {toBeRemoved: [], toBeAdded: []}
+      result: {
+        toBeAdded: toObj([7.8], [8.4]),
+        toBeRemoved: getOrders([7.5], [8.1])
+      },
     },
     {
-      description: "should return empty map if an order exists with buy execution price",
-      orders: getOrders([7.7, 7.6, 7.5], "buy").concat(getOrders([8.1, 8.2, 8.3], "sell")),
+      description: "2",
+      orders: getOrders([7.3, 7.4, 7.5], [8.1, 8.2, 8.3]),
       executionPrice: 7.5,
       executionSide: "buy",
-      result: {toBeRemoved: [], toBeAdded: []}
+      result: {
+        toBeAdded: toObj([7.2], [7.8, 7.9, 8.0]),
+        toBeRemoved: getOrders([7.5], [8.1, 8.2, 8.3])
+      }
     },
     {
-      description: "should add sell order if buy execution happens and buy order does not exist at that price",
-      orders: getOrders([7.6, 7.5], "buy").concat(getOrders([8.1, 8.2, 8.3], "sell")),
+      description: "3",
+      orders: getOrders([7.6, 7.5], [8.1, 8.2, 8.3]),
       executionPrice: 7.7,
       executionSide: "buy",
-      result: {toBeAdded: toObj([8], "sell").concat(toObj([7.4], "buy")), toBeRemoved: []}
+      result: {
+        toBeAdded: toObj([7.4], [8]),
+        toBeRemoved: getOrders([], [8.3])
+      }
     },
     {
-      description: "should add buy order if sell execution happens and sell order does not exist at that price",
-      orders: getOrders([7.7, 7.6, 7.5], "buy").concat(getOrders([8.2, 8.3], "sell")),
+      description: "4",
+      orders: getOrders([7.7, 7.6, 7.5], [8.2, 8.3]),
       executionPrice: 8.1,
       executionSide: "sell",
-      result: {toBeAdded: toObj([7.8], "buy").concat(toObj([8.4], "sell")), toBeRemoved: []}
+      result: {
+        toBeAdded: toObj([7.8], [8.4]),
+        toBeRemoved: getOrders([7.5])
+      }
     },
     {
-      description: "should remove extra orders",
-      orders: getOrders([7.7, 7.6, 7.5, 7.4], "buy").concat(getOrders([8.2, 8.3], "sell")),
+      description: "5",
+      orders: getOrders([7.7, 7.6, 7.5, 7.4], [8.2, 8.3]),
       executionPrice: 8.1,
       executionSide: "sell",
-      result: {toBeAdded: toObj([7.8], "buy").concat(toObj([8.4], "sell")), toBeRemoved: getOrders([7.4], "buy")}
+      result: {
+        toBeAdded: toObj([7.8], [8.4]),
+        toBeRemoved: getOrders([7.5, 7.4], [])
+      }
     },
     {
-      description: "should not create new orders if order at that price exists for sell side",
-      orders: getOrders([7.8, 7.7, 7.6], "buy").concat(getOrders([8.2, 8.3, 8.4], "sell")),
+      description: "6",
+      orders: getOrders([7.8, 7.7, 7.6], [8.2, 8.3, 8.4]),
       executionPrice: 8.1,
       executionSide: "sell",
-      result: {toBeAdded: [], toBeRemoved: []}
+      result: {
+        toBeAdded: toObj([], []),
+        toBeRemoved: getOrders([], [])
+      }
     },
     {
-      description: "should not create new orders if order at that price exists for buy side",
-      orders: getOrders([7.7, 7.6, 7.5], "buy").concat(getOrders([8.1, 8.2, 8.3], "sell")),
+      description: "7",
+      orders: getOrders([7.7, 7.6, 7.5], [8.1, 8.2, 8.3]),
       executionPrice: 7.8,
       executionSide: "buy",
-      result: {toBeAdded: [], toBeRemoved: []}
+      result: {
+        toBeAdded: toObj([], []),
+        toBeRemoved: getOrders([], [])
+      }
     },
     {
-      description: "should create orders if it does not have enough depth for sell side",
-      orders: getOrders([7.7, 7.6, 7.5], "buy").concat(getOrders([8.1], "sell")),
+      description: "8",
+      orders: getOrders([7.7, 7.6, 7.5], [8.1]),
       executionPrice: 7.8,
       executionSide: "buy",
-      result: {toBeAdded: toObj([8.2, 8.3], "sell"), toBeRemoved: []}
+      result: {
+        toBeAdded: toObj([], [8.2, 8.3]),
+        toBeRemoved: getOrders([], [])
+      }
     },
     {
-      description: "should create orders if it does not have enough depth for buy side",
-      orders: getOrders([7.7], "buy").concat(getOrders([8.1, 8.2, 8.3], "sell")),
+      description: "9",
+      orders: getOrders([7.7], [8.1, 8.2, 8.3]),
       executionPrice: 7.8,
       executionSide: "buy",
-      result: {toBeAdded: toObj([7.6, 7.5], "buy"), toBeRemoved: []}
+      result: {
+        toBeAdded: toObj([7.6, 7.5], []),
+        toBeRemoved: getOrders([], [])
+      }
     },
     {
-      description: "should create orders on buy side if there are no buys and last price is of sell side",
-      orders: getOrders([8.1, 8.2, 8.3], "sell"),
+      description: "10",
+      orders: getOrders([], [8.1, 8.2, 8.3]),
       executionPrice: 7.8,
       executionSide: "sell",
-      result: {toBeAdded: toObj([7.5, 7.4, 7.3], "buy"), toBeRemoved: []}
+      result: {
+        toBeAdded: toObj([7.5, 7.4, 7.3], [7.9, 8.0]),
+        toBeRemoved: getOrders([], [8.2, 8.3])
+      }
     },
     {
-      description: "should create orders on sell side if there are no sells and last price is of buy side",
-      orders: getOrders([8.1, 8.2, 8.3], "buy"),
+      description: "11",
+      orders: getOrders([8.1, 8.2, 8.3], []),
       executionPrice: 8.4,
       executionSide: "buy",
-      result: {toBeAdded: toObj([8.7, 8.8, 8.9], "sell"), toBeRemoved: []}
-    }
+      result: {
+        toBeAdded: toObj([], [8.7, 8.8, 8.9]),
+        toBeRemoved: getOrders([], [])
+      }
+    },
+    {
+      description: "12: duplicate",
+      orders: getOrders([8.1, 8.1, 8.2, 8.2, 8.3], [8.7, 8.7, 8.7]),
+      executionPrice: 8.4,
+      executionSide: "buy",
+      result: {
+        toBeAdded: toObj([], [8.8, 8.9]),
+        toBeRemoved: getOrders([8.1, 8.2], [8.7,8.7])
+      }
+    },
   ]
 
   return {config, tests}
