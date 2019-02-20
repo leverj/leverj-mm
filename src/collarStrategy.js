@@ -28,12 +28,12 @@ module.exports = function () {
     if (sells.length && executionSide === SELL && sells[0].price <= executionPrice) return padBook(buys, sells, executionPrice, executionSide)
     if (executionSide === BUY && buys.length && buys[0].price <= executionPrice) {
       let price = sinful.add(buys[0].price, config.spread)
-      const toBeAdded = sells[0].price > price ? [{side: SELL, price}] : undefined
+      const toBeAdded = sells.length && sells[0].price > price ? [{side: SELL, price}] : undefined
       return padBook(buys, sells, executionPrice, executionSide, toBeAdded)
     }
     if (executionSide === SELL && sells.length && sells[0].price >= executionPrice) {
       let price = sinful.sub(sells[0].price, config.spread);
-      const toBeAdded = buys[0].price < price ? [{side: BUY, price: price}] : undefined
+      const toBeAdded = buys.length && buys[0].price < price ? [{side: BUY, price: price}] : undefined
       return padBook(buys, sells, executionPrice, executionSide, toBeAdded)
     }
     return padBook(buys, sells, executionPrice, executionSide)

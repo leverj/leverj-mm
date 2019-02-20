@@ -88,14 +88,28 @@ module.exports = function () {
       orders: getOrders([7.7, 7.6, 7.5], "buy").concat(getOrders([8.1], "sell")),
       executionPrice: 7.8,
       executionSide: "buy",
-      result: {toBeAdded: toObj([8.2,8.3], "sell"), toBeRemoved: []}
+      result: {toBeAdded: toObj([8.2, 8.3], "sell"), toBeRemoved: []}
     },
     {
       description: "should create orders if it does not have enough depth for buy side",
-      orders: getOrders([7.7], "buy").concat(getOrders([8.1, 8.2,8.3], "sell")),
+      orders: getOrders([7.7], "buy").concat(getOrders([8.1, 8.2, 8.3], "sell")),
       executionPrice: 7.8,
       executionSide: "buy",
       result: {toBeAdded: toObj([7.6, 7.5], "buy"), toBeRemoved: []}
+    },
+    {
+      description: "should create orders on buy side if there are no buys and last price is of sell side",
+      orders: getOrders([8.1, 8.2, 8.3], "sell"),
+      executionPrice: 7.8,
+      executionSide: "sell",
+      result: {toBeAdded: toObj([7.5, 7.4, 7.3], "buy"), toBeRemoved: []}
+    },
+    {
+      description: "should create orders on sell side if there are no sells and last price is of buy side",
+      orders: getOrders([8.1, 8.2, 8.3], "buy"),
+      executionPrice: 8.4,
+      executionSide: "buy",
+      result: {toBeAdded: toObj([8.7, 8.8, 8.9], "sell"), toBeRemoved: []}
     }
   ]
 
