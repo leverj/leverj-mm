@@ -46,9 +46,9 @@ module.exports = (async function () {
   }
 
   async function setLastPriceAndSide() {
-    const executions = await zka.rest.get(`/account/${config.symbol}/execution`)
-    if (executions.length)
-      setPriceAndSide(executions[0].price, executions[0].side)
+    const trades = await zka.rest.get(`/contract/${config.symbol}/trade`)
+    if (trades.length)
+      setPriceAndSide(trades[0].price, trades[0].side)
     else
       setPriceAndSide(config.startPrice, config.startSide)
   }
@@ -72,10 +72,15 @@ module.exports = (async function () {
     setInterval(delayedRemoveAndAddOrders, 20000)
   }
 
+  function onTrade({instrument, price, side}) {
+    if (instrument !== config.symbol) return
+    setPriceAndSide(price, side)
+    delayedRemoveAndAddOrders()
+  }
 
   function onExecution(accountExecution) {
-    setPriceAndSide(accountExecution.price, accountExecution.side)
-    delayedRemoveAndAddOrders()
+    // setPriceAndSide(accountExecution.price, accountExecution.side)
+    // delayedRemoveAndAddOrders()
   }
 
   let collarTimer
@@ -94,7 +99,7 @@ module.exports = (async function () {
     if (collarWorking) return
     collarWorking = true
     try {
-      console.log(formattedDate(), "removeAndAddOrders", lastPrice, lastSide )
+      console.log(formattedDate(), "removeAndAddOrders", lastPrice, lastSide)
       let {toBeAdded, toBeRemoved} = collarStrategy.getOrdersToBeAddedAndDeleted(Object.values(orders), lastPrice, lastSide);
       const newOrders = toBeAdded.map(each => newOrder(each.side, each.price, config.quantity))
       let patch = []
@@ -125,6 +130,7 @@ module.exports = (async function () {
       server_time: onNtp,
       instruments: updateInstruments,
       order_execution: onExecution,
+      trade: onTrade,
     };
     Object.keys(eventMap).forEach(function (event) {
       zka.socket.removeAllListeners(event)
