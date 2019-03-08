@@ -1,0 +1,18 @@
+{
+  "name": "@leverj/leverj-mm.bot",
+  "version": "0.0.2",
+  "description": "Leverj Market Maker / bot",
+  "license": "MIT",
+  "scripts": {
+    "test": "mocha test/*"
+  },
+  "dependencies": {
+    "@leverj/leverj-common": "^0.0.16",
+    "affirm.js": "^1.0.0",
+    "config": "^3.0.1",
+    "lodash": "^4.17.11",
+    "rest.js": "^0.2.1",
+    "sinful-math.js": "^0.0.3",
+    "zka": "^0.0.4"
+  }
+}
