@@ -125,7 +125,7 @@ module.exports = (async function () {
   function listen() {
     const eventMap = {
       readonly: onReadOnly,
-      reconnect: onConnect,
+      reconnect: onReconnect,
       connect_error: onConnectEvent,
       connect_timeout: onConnectEvent,
       disconnect: onConnectEvent,
@@ -178,8 +178,8 @@ module.exports = (async function () {
     readOnly = data.readonly
   }
 
-  function onConnect(data) {
-
+  function onReconnect(data) {
+    zka.socket.register()
   }
 
   function onConnectEvent(data) {
