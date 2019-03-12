@@ -7,7 +7,7 @@
     "test": "mocha test/*"
   },
   "dependencies": {
-    "@leverj/leverj-common": "^0.0.16",
+    "@leverj/leverj-common": "^0.0.18",
     "affirm.js": "^1.0.0",
     "config": "^3.0.1",
     "lodash": "^4.17.11",

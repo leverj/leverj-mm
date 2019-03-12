@@ -47,7 +47,7 @@ module.exports = (async function () {
       token: instrument().address,
       instrument: instrument().symbol
     }
-    order.signature = orderAuthenticator.sign(order, instrument().decimals, config.secret)
+    order.signature = orderAuthenticator.sign(order, instrument(), config.secret)
     return order
   }
 
