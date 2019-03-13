@@ -1,4 +1,4 @@
-FROM coinpit/nodejs:v10.15.1
+FROM leverj/nodejs:v10.15.1
 COPY src ./dist/src
 COPY config ./dist/config
 COPY ["package.json","yarn.lock","./dist/"]
