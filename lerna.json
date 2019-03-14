@@ -1,5 +1,5 @@
 {
-  "version": "0.0.2",
+  "version": "0.0.1",
   "packages": [
     "packages/*"
   ],
@@ -14,7 +14,7 @@
   ],
   "command": {
     "publish": {
-      "allowBranch": "master"
+      "allowBranch": "develop"
     }
   }
 }

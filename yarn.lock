@@ -640,14 +640,6 @@
   dependencies:
     "@leverj/gluon-plasma.common" "0.41.16"
 
-"@leverj/leverj-common@^0.0.18":
-  version "0.0.18"
-  resolved "https://registry.yarnpkg.com/@leverj/leverj-common/-/leverj-common-0.0.18.tgz#f7285d812c508465e7ade859e8265b5774a82faf"
-  integrity sha512-gxNaVSdMJRhqreTBjMBVkMrnYyaQ38VDrcP2ez4fhaBqnyr0TIY9ksB+1HkoCw/rtHBBj8M//3vF8TrCVvfnUQ==
-  dependencies:
-    "@leverj/gluon-plasma.exchange" "0.41.16"
-    affirm.js "^1.0.0"
-
 "@mrmlnc/readdir-enhanced@^2.2.1":
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/@mrmlnc/readdir-enhanced/-/readdir-enhanced-2.2.1.tgz#524af240d1a360527b730475ecfa1344aa540dde"

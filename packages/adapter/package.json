@@ -1,0 +1,26 @@
+{
+  "name": "@leverj/adapter",
+  "version": "0.0.1",
+  "description": "common utilities used in leverj exchange",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha test/**",
+    "publish:patch": "npm version patch && npm publish && git push --follow-tags"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/leverj/leverj-mm.git"
+  },
+  "keywords": [
+    "leverj",
+    "web3",
+    "exchange",
+    "leverage"
+  ],
+  "author": "leverj",
+  "license": "MIT",
+  "dependencies": {
+    "@leverj/gluon-plasma.exchange": "0.41.16",
+    "affirm.js": "^1.0.0"
+  }
+}

@@ -1,7 +1,6 @@
 const config = require("./config")
 const zka = require("zka")(config.baseUrl, "/api/v1")
-const rest = require('rest.js')
-const orderAuthenticator = require("@leverj/leverj-common/OrderAuthentication")
+const orderAuthenticator = require("@leverj/adapter/src/OrderAdapter")
 const _ = require('lodash')
 const collarStrategy = require('./collarStrategy')
 
