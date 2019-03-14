@@ -6,6 +6,8 @@
   "scripts": {
     "test": "mocha test/**"
   },
+  "private": true,
+  "author": "leverj",
   "dependencies": {
     "@leverj/adapter": "0.0.2",
     "affirm.js": "^1.0.0",
