@@ -1,0 +1,21 @@
+{
+  "name": "@leverj/adapter",
+  "version": "0.0.2",
+  "description": "common utilities used in leverj exchange",
+  "license": "MIT",
+  "scripts": {
+    "test": "mocha test/**"
+  },
+  "private": false,
+  "keywords": [
+    "leverj",
+    "web3",
+    "exchange",
+    "leverage"
+  ],
+  "author": "leverj",
+  "dependencies": {
+    "@leverj/gluon-plasma.exchange": "0.41.16",
+    "affirm.js": "^1.0.0"
+  }
+}

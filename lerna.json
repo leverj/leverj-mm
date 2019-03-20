@@ -1,0 +1,20 @@
+{
+  "version": "0.0.2",
+  "packages": [
+    "packages/*"
+  ],
+  "npmClient": "yarn",
+  "useWorkspaces": true,
+  "ignoreChanges": [
+    "**/test/**",
+    "**/bin/**",
+    "**/deployment/**",
+    "**/.*",
+    "**/*.md"
+  ],
+  "command": {
+    "publish": {
+      "allowBranch": "develop"
+    }
+  }
+}
