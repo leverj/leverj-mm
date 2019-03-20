@@ -6,7 +6,6 @@
   "scripts": {
     "test": "mocha test/**"
   },
-  "private": true,
   "author": "leverj",
   "dependencies": {
     "@leverj/adapter": "0.0.2",
