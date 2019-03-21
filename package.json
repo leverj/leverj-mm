@@ -1,37 +1,41 @@
 {
-  "name": "leverj-mm",
-  "version": "0.0.1",
+  "name": "@leverj/leverj-mm",
   "description": "Leverj  Market Maker",
-  "scripts": {
-    "test": "mocha specs/*"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/leverj/leverj-mm.git"
-  },
   "keywords": [
     "market maker",
     "leverj",
     "trading",
     "simulation"
   ],
-  "author": "Leverj",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/leverj/leverj-mm.git"
+  },
+  "author": "leverj",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/leverj/leverj-mm/issues"
   },
-  "homepage": "https://github.com/leverj/leverj-mm#readme",
-  "dependencies": {
-    "@leverj/leverj-common": "^0.0.16",
-    "affirm.js": "^1.0.0",
-    "config": "^3.0.1",
-    "lodash": "^4.17.11",
-    "rest.js": "^0.2.1",
-    "sinful-math.js": "^0.0.3",
-    "zka": "^0.0.4"
+  "homepage": "https://github.com/leverj/leverj-mm#README.md",
+  "engines": {
+    "node": ">= 10.15.1",
+    "yarn": ">= 1.13.0"
+  },
+  "private": true,
+  "workspaces": ["packages/*"],
+  "scripts": {
+    "bootstrap": "lerna bootstrap",
+    "test": "lerna run test",
+    "test:workspaces": "yarn all-workspaces run test",
+    "publish:patch": "up=patch yarn publish:up",
+    "publish:minor": "up=minor yarn publish:up",
+    "publish:major": "up=major yarn publish:up",
+    "publish:up": "lerna version $up --exact --git-tag-version --push --yes && lerna publish from-git --yes"
   },
   "devDependencies": {
     "expect.js": "^0.3.1",
-    "mocha": "^5.2.0"
+    "mocha": "^5.2.0",
+    "lerna": "^3.13.1",
+    "yarn-all-workspaces": "^1.0.0"
   }
 }

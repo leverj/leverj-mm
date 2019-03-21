@@ -1,7 +1,6 @@
 const config = require("./config")
 const zka = require("zka")(config.baseUrl, "/api/v1")
-const rest = require('rest.js')
-const orderAuthenticator = require("@leverj/leverj-common/OrderAuthentication")
+const orderAuthenticator = require("@leverj/adapter/src/OrderAdapter")
 const _ = require('lodash')
 const collarStrategy = require('./collarStrategy')
 
@@ -47,7 +46,7 @@ module.exports = (async function () {
       token: instrument().address,
       instrument: instrument().symbol
     }
-    order.signature = orderAuthenticator.sign(order, instrument().decimals, config.secret)
+    order.signature = orderAuthenticator.sign(order, instrument(), config.secret)
     return order
   }
 
