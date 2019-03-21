@@ -1,0 +1,24 @@
+{
+  "name": "@leverj/index",
+  "version": "0.0.2",
+  "description": "External spot price use by leverj exchange / bot",
+  "license": "MIT",
+  "scripts": {
+    "test": "NODE_ENV=test mocha --recursive --exit specs"
+  },
+  "author": "leverj",
+  "dependencies": {
+    "affirm.js": "^1.0.0",
+    "autobahn": "^18.10.2",
+    "bluebird": "^3.5.3",
+    "config": "^3.0.1",
+    "lodash": "^4.17.11",
+    "mangler": "^1.0.4",
+    "median": "^0.0.2",
+    "pusher-client": "^1.1.0",
+    "rest.js": "^0.2.1",
+    "socket.io": "^2.2.0",
+    "socket.io-client": "^2.2.0",
+    "ws": "^6.2.0"
+  }
+}

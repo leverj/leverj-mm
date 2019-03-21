@@ -1,0 +1,86 @@
+{
+  "minExternalProviders": 3,
+  "ticksize"            : 3,
+  "logExternalPrice"    : true,
+  "expiryTime"          : 5,
+  "port"                : 8090,
+  "startupDelay"        : 60000,
+  "components" : [
+    {
+      "name":"bitfinex",
+      "url":"https://api.bitfinex.com/v1/pubticker/btcusd",
+      "path":["last_price"],
+      "socketModule": "./bitfinex",
+      "frequency": 5000
+    },
+    {
+      "name":"bitstamp",
+      "url":"https://www.bitstamp.net/api/v2/ticker/btcusd",
+      "path":["last"],
+      "socketModule": "./bitstamp",
+      "frequency": 5000
+    },
+    {
+      "name":"okcoin",
+      "url":"https://www.okcoin.com/api/v1/ticker.do?symbol=btc_usd",
+      "path":["ticker","last"],
+      "socketModule": "./okcoin",
+      "frequency": 5000
+    },
+    {
+      "name":"gdax",
+      "url":"https://api.gdax.com/products/BTC-USD/ticker",
+      "path":["price"],
+      "socketModule": "./gdax",
+      "frequency": 5000
+    },
+    {
+      "name": "itbit",
+      "url":      "https://api.itbit.com/v1/markets/XBTUSD/ticker",
+      "path":     ["lastPrice"],
+      "frequency": 1000
+    },
+    {
+      "name":"gemini",
+      "url":"https://api.gemini.com/v1/pubticker/btcusd",
+      "path":["last"],
+      "socketModule": "./gemini",
+      "frequency": 5000
+    },
+    {
+      "name": "dsx",
+      "url":      "https://dsx.uk/mapi/ticker/btcusd",
+      "path":     ["btcusd", "last"],
+      "frequency": 1000
+    },
+    {
+      "name": "kraken",
+      "url":      "https://api.kraken.com/0/public/Ticker?pair=XBTUSD",
+      "path":     ["result", "XXBTZUSD", "c", "0"],
+      "frequency": 1000
+    },
+    {
+      "name": "allcoin",
+      "url":      "https://api.allcoin.com/api/v1/ticker?symbol=btc_usd",
+      "path":     ["ticker", "last"],
+      "frequency": 1000
+    },
+    {
+      "name": "livecoin",
+      "url":      "https://api.livecoin.net//exchange/ticker?currencyPair=BTC/USD",
+      "path":     ["last"],
+      "frequency": 1000
+    },
+    {
+      "name": "btc-e",
+      "url":      "https://btc-e.com/api/3/ticker/btc_usd",
+      "path":     ["btc_usd", "last"],
+      "frequency": 1000
+    },
+    {
+      "name":"quoine",
+      "url":"https://api.quoine.com/executions?product_id=1&limit=1",
+      "path":["models","0","price"]
+    }
+  ]
+}

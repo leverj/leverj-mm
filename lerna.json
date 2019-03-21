@@ -3,6 +3,9 @@
   "packages": [
     "packages/*"
   ],
+  "script": {
+    "test": "NODE_ENV=test mocha --recursive --exit specs"
+  },
   "npmClient": "yarn",
   "useWorkspaces": true,
   "ignoreChanges": [
