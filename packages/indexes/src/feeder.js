@@ -1,5 +1,5 @@
 module.exports = function (name) {
-  var util     = require('util')
+  var logger     = require("@leverj/logger")
   var config   = require('config')
   var Emitter  = require('events').EventEmitter;
   var emitter  = new Emitter();
@@ -23,7 +23,7 @@ module.exports = function (name) {
 
   feeder.priceReceived = function (price) {
     price = price - 0
-    if (!price || isNaN(price)) return util.log(name, " invalid price ", price)
+    if (!price || isNaN(price)) return logger.log(name, " invalid price ", price)
     feed = {
       type : "socket",
       name : name,
@@ -37,7 +37,7 @@ module.exports = function (name) {
   feeder.clearPrice = function () {
     feed         = _.cloneDeep(feed)
     feed.expired = true
-    util.log('clearPrice', feed)
+    logger.log('clearPrice', feed)
     emitter.emit('price', feed)
   }
 
@@ -47,7 +47,7 @@ module.exports = function (name) {
 
   setInterval(function () {
     if (Date.now() - lastTime > 150000) {
-      util.log('Reconnecting', name)
+      logger.log('Reconnecting', name)
       feeder.reconnect()
     }
   }, 100000)

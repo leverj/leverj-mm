@@ -1,89 +1,87 @@
-var mangler   = require('mangler')
-var median    = require('median')
-var util      = require("util")
-var RestIndex = require('./restIndex')
-var Price     = require('./price')
+const affirm = require('affirm.js')
+const mangler = require('mangler');
+const median = require('median');
+const logger = require("@leverj/logger");
+const RestIndex = require('./restIndex');
+const Price = require('./price');
 
-module.exports = function (config) {
-  var index = {}
-  var TOPIC = "coinpit-index#BTCUSD"
-  var io    = require('socket.io')(config.port)
-
-  var prices        = {}
-  var feedProviders = index.components = {}
+module.exports = function (config, io) {
+  const index = {};
+  const TOPIC = config.topic;
+  const prices = {};
+  const feedProviders = index.components = {};
   // var restPrices    = {}
-  var priceIndex    = {}
-  var current       = {}
+  let priceIndex = {};
+  const current = {};
 
-  var startTime
+  let startTime;
 
 
-  function configureSocket(name, socketModule) {
-    if(!socketModule) return
-    feedProviders[name] = require(socketModule)(name)
-    feedProviders[name].on('price', function (data) {
-      var changed = prices[name].setSocketPrice(data)
-      if(changed) index.priceChanged(name)
+  function configureSocket(providerName, socketModule) {
+    if (!socketModule) return
+    feedProviders[providerName] = require(socketModule)(providerName)
+    feedProviders[providerName].on('price', function (data) {
+      const changed = prices[providerName].setSocketPrice(data);
+      if (changed) index.priceChanged(providerName)
     })
   }
 
-  function configureRest(name, config) {
-    if(!config.url) return
-    var restIndex = RestIndex(config)
-    restIndex.on('price', function(data) {
-      var changed = prices[name].setRestPrice(data)
-      if(changed) index.priceChanged(name)
+  function configureRest(providerName, provider) {
+    const restIndex = RestIndex(provider);
+    restIndex.on('price', function (data) {
+      const changed = prices[providerName].setRestPrice(data);
+      if (changed) index.priceChanged(providerName)
     })
   }
 
-  index.init = function() {
-    config.components.forEach(component => {
-      var name = component.name
-      prices[name] = Price(name)
-      configureSocket(name, component.socketModule)
-      configureRest(name, component)
-    })
-    util.log('started', startTime = Date.now())
+  index.init = function () {
+    for (const provider of config.providers) {
+      const providerName = provider.name;
+      prices[providerName] = Price(providerName)
+      // configureSocket(name, component.socketModule)
+      configureRest(providerName, provider)
+    }
+    logger.log('started', startTime = Date.now(), TOPIC)
     io.on('connection', function (socket) {
       socket.emit(TOPIC, priceIndex)
     })
   }
 
   function getActivePriceList() {
-    var list = []
-    config.components.forEach(component => {
-      var indexPrice = prices[component.name].getPrice()
-      if (indexPrice !== undefined) list.push(indexPrice)
-    })
-    return list
+    const priceList = Object.keys(prices).map(providerName => prices[providerName].getPrice())
+    return priceList.filter(price => price !== undefined)
   }
 
-  function publishFeed(list, feedProvider) {
-    var minExternalProviders = config.minExternalProviders || 1
-    var unExpired = list.filter(x => !x.expired)
-    var price = unExpired.length < minExternalProviders ? undefined : median(unExpired.map(x=>x.price)).toFixed(config.ticksize) - 0
-    priceIndex     = { price: price, lastProvider: feedProvider, used: unExpired.length, providers: list }
-    if (config.logExternalPrice) util.log('coinpit-index:', prettyPrint(priceIndex))
+  function publishFeed(priceList, providerName) {
+    const minExternalProviders = config.minExternalProviders || 1;
+    const unExpired = priceList.filter(x => !x.expired);
+    const price = unExpired.length < minExternalProviders ? undefined : median(unExpired.map(inverted)).toFixed(config.ticksize) - 0;
+    priceIndex = {price: price, lastProvider: providerName, used: unExpired.length, providers: priceList}
+    if (config.logExternalPrice) logger.log(TOPIC, prettyPrint(priceIndex))
     if (io) io.emit(TOPIC, priceIndex)
   }
 
+  function inverted(price) {
+    return providerFromConfig(price.name).inverse ? 1 / price.price : price.price
+  }
+
   function prettyPrint(priceIndex) {
-    var result = {}
-    priceIndex.providers.forEach(p => result[p.name+"."+p.type] = p.price)
+    const result = {};
+    priceIndex.providers.forEach(p => result[p.name + "." + p.type] = p.price)
     return [priceIndex.price, priceIndex.used, priceIndex.lastProvider, JSON.stringify(result)].join(" ")
   }
 
-  var delayedResponder = (function () {
-    var responder = {}
-    var timer
+  const delayedResponder = (function () {
+    const responder = {};
+    let timer;
 
-    responder.isReadyToSendPrice = function (feedProvider, count, timeoutMessage) {
+    responder.isReadyToSendPrice = function (providerName, count, timeoutMessage) {
       if (timer) clearTimeout(timer)
-      if (timeoutMessage) util.log(timeoutMessage)
-      if (count === config.components.length || isWaitTimeDone()) return true
+      if (timeoutMessage) logger.log(timeoutMessage)
+      if (count === config.providers.length || isWaitTimeDone()) return true
       timer = setTimeout(function () {
-        index.priceChanged(feedProvider, 'called after wait')
-      }, config.startupDelay -(Date.now() - startTime))
+        index.priceChanged(providerName, 'called after wait')
+      }, config.startupDelay - (Date.now() - startTime))
       return false
     }
 
@@ -92,18 +90,24 @@ module.exports = function (config) {
     }
 
     return responder
-  })()
+  })();
 
-  index.priceChanged = function(feedProvider, timeoutMessage) {
-    var list             = getActivePriceList()
-    var readyToSendPrice = delayedResponder.isReadyToSendPrice(feedProvider, list.length, timeoutMessage)
-    if (readyToSendPrice) publishFeed(list, feedProvider)
+  function providerFromConfig(providerName) {
+    let provider = config.providers.filter(provider => provider.name === providerName);
+    affirm(provider.length === 1, `provider ${providerName} not found in ${config.providers}`)
+    return provider.length === 0 ? undefined : provider[0]
+  }
+
+  index.priceChanged = function (providerName, timeoutMessage) {
+    const priceList = getActivePriceList();
+    const readyToSendPrice = delayedResponder.isReadyToSendPrice(providerName, priceList.length, timeoutMessage);
+    if (readyToSendPrice) publishFeed(priceList, providerName)
   }
 
   index.getIndex = function () {
     return priceIndex
   }
-  index.reset    = function () {
+  index.reset = function () {
     priceIndex = {}
   }
 

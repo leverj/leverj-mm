@@ -8,6 +8,7 @@
   },
   "author": "leverj",
   "dependencies": {
+    "@leverj/logger": "0.0.2",
     "affirm.js": "^1.0.0",
     "autobahn": "^18.10.2",
     "bluebird": "^3.5.3",

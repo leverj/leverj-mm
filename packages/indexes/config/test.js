@@ -1,4 +1,4 @@
-{
+module.exports = {
   "minExternalProviders": 1,
   "ticksize"            : 1,
   "bandUpperLimit"      : 2,
