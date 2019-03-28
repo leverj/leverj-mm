@@ -25,10 +25,10 @@ jobs:
           fi
       - run: |
           if [ "$CIRCLE_BRANCH" == "develop" ] ; then
-            cp yarn.lock packages/bot/
+            cp yarn.lock packages/indexes/
             docker info
-            docker build -t leverj/leverj-mm:$CIRCLE_BRANCH packages/bot
+            docker build -t leverj/indexes:$CIRCLE_BRANCH packages/indexes
             docker login -u $DOCKER_USER -p $DOCKER_PASS
-            docker push leverj/leverj-mm
+            docker push leverj/indexes:$CIRCLE_BRANCH
             docker logout
           fi
