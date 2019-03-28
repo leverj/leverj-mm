@@ -9,6 +9,7 @@
   "author": "leverj",
   "dependencies": {
     "@leverj/adapter": "0.0.3",
+    "@leverj/logger": "0.0.3",
     "affirm.js": "^1.0.0",
     "config": "^3.0.1",
     "lodash": "^4.17.11",

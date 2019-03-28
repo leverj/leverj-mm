@@ -19,7 +19,7 @@ module.exports = function () {
   fixed.getOrdersToBeAddedAndDeleted = function temp(orders, price, side) {
     affirm(config, "config is not set")
     affirm(Array.isArray(orders), "Orders must be an array: " + orders)
-    affirm(side === BUY || side === SELL, "Invalid side: " + side)
+    affirm(side === BUY || side === SELL || side === undefined, "Invalid side: " + side)
     affirmPositive(price, "price")
     const currentBook = getCurrentBook(orders)
     const duplicates = getDuplicates(orders, currentBook)
@@ -57,7 +57,14 @@ module.exports = function () {
   }
 
   function getNewPrice(price, side) {
-    const buyPrice = side === BUY ? sinful.sub(price, config.step) : sinful.sub(price, sinful.sub(config.spread, config.step))
+    let buyPrice
+    if (side === BUY) {
+      buyPrice = sinful.sub(price, config.step)
+    } else if (side === SELL) {
+      buyPrice = sinful.sub(price, sinful.sub(config.spread, config.step))
+    } else {
+      buyPrice = sinful.sub(price, sinful.sub(sinful.div(config.spread, 2)))
+    }
     const sellPrice = sinful.add(buyPrice, config.spread)
     return [buyPrice, sellPrice]
   }

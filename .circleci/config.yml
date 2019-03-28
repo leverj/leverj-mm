@@ -12,11 +12,23 @@ jobs:
       - run: sudo npm install -g yarn
       - run: yarn install --frozen-lockfile
       - run: yarn test
-      - run: cp yarn.lock packages/bot/
       - setup_remote_docker:
           docker_layer_caching: true
-      - run: docker info
-      - run: docker build -t leverj/leverj-mm:$CIRCLE_BRANCH packages/bot
-      - run: docker login -u $DOCKER_USER -p $DOCKER_PASS
-      - run: docker push leverj/leverj-mm
-      - run: docker logout
+      - run: |
+          if [ "$CIRCLE_BRANCH" == "develop" -o "$CIRCLE_BRANCH" == "testnet" -o "$CIRCLE_BRANCH" == "master" ] ; then
+            cp yarn.lock packages/bot/
+            docker info
+            docker build -t leverj/leverj-mm:$CIRCLE_BRANCH packages/bot
+            docker login -u $DOCKER_USER -p $DOCKER_PASS
+            docker push leverj/leverj-mm
+            docker logout
+          fi
+      - run: |
+          if [ "$CIRCLE_BRANCH" == "develop" ] ; then
+            cp yarn.lock packages/indexes/
+            docker info
+            docker build -t leverj/indexes packages/indexes
+            docker login -u $DOCKER_USER -p $DOCKER_PASS
+            docker push leverj/indexes
+            docker logout
+          fi

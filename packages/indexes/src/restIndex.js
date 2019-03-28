@@ -10,9 +10,9 @@ module.exports = function (restProvider) {
   const DEFAULT_FREQUENCY = 1000;
   const MINUTE = 60 * 1000;
   const index = _.assign({}, restProvider);
-  affirm(index.url && url.parse(index.url), 'Invalid provider url')
+  affirm(index.url() && url.parse(index.url()), 'Invalid provider url')
   affirm(restProvider.name, 'rest provider name is not defined')
-  logger.log("restIndex", index.url)
+  logger.log("restIndex", index.url())
   const emitter = new Emitter();
   let restPrice, working;
   index.on = emitter.on.bind(emitter)
@@ -23,7 +23,7 @@ module.exports = function (restProvider) {
     working = true
     let response;
     try {
-      response = await rest.get(index.url, {'User-Agent': 'restjs'})
+      response = await rest.get(index.url(), {'User-Agent': 'restjs'})
       affirm(response && response.body, 'Invalid response: ' + response.statusCode)
       let data = response.body;
       if (typeof data === 'string') data = JSON.parse(data)
@@ -42,15 +42,6 @@ module.exports = function (restProvider) {
     } finally {
       working = false
     }
-  }
-
-  function getPriceUsingPath(data, path) {
-    if (path.length === 0) return data
-    const key = path[0];
-    path = path.slice(1)
-    data = data[key]
-    affirm(data, 'key [' + key + '] not found in data retrieved from provider. ' + JSON.stringify(data))
-    return getPriceUsingPath(data, path)
   }
 
   index.getPrice()
