@@ -43,7 +43,7 @@ module.exports = function (config, io) {
     }
     logger.log('started', startTime = Date.now(), TOPIC)
     io.on('connection', function (socket) {
-      socket.emit(TOPIC, priceIndex)
+      if (priceIndex.price) socket.emit(TOPIC, priceIndex)
     })
   }
 
@@ -56,9 +56,10 @@ module.exports = function (config, io) {
     const minExternalProviders = config.minExternalProviders || 1;
     const unExpired = priceList.filter(x => !x.expired);
     const price = unExpired.length < minExternalProviders ? undefined : median(unExpired.map(inverted)).toFixed(config.ticksize) - 0;
+    if (!price) return
     priceIndex = {price: price, lastProvider: providerName, used: unExpired.length, providers: priceList}
     if (config.logExternalPrice) logger.log(TOPIC, prettyPrint(priceIndex))
-    if (io) io.emit(TOPIC, priceIndex)
+    if (io ) io.emit(TOPIC, priceIndex)
   }
 
   function inverted(price) {

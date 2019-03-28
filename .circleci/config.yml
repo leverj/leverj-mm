@@ -27,8 +27,8 @@ jobs:
           if [ "$CIRCLE_BRANCH" == "develop" ] ; then
             cp yarn.lock packages/indexes/
             docker info
-            docker build -t leverj/indexes:$CIRCLE_BRANCH packages/indexes
+            docker build -t leverj/indexes packages/indexes
             docker login -u $DOCKER_USER -p $DOCKER_PASS
-            docker push leverj/indexes:$CIRCLE_BRANCH
+            docker push leverj/indexes
             docker logout
           fi
