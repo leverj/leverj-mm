@@ -27,7 +27,7 @@ module.exports = {
           "name": "bitfinex",
           "url": () => "https://api.bitfinex.com/v1/pubticker/daieth",
           price: (_) => average(_.bid, _.ask),
-          "frequency": 3000,
+          "frequency": 5000,
           "inverse": true
         },
         {
