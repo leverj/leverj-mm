@@ -9,7 +9,7 @@ var bluebird  = require('bluebird')
 var config    = require('config')
 var clock
 
-describe('Coinpit Index', function() {
+describe.skip('Coinpit Index', function() {
   var MINUTE = 60 * 1000
 
   beforeEach(function() {

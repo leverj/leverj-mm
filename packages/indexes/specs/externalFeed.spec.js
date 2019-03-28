@@ -6,7 +6,7 @@ var bluebird = require('bluebird')
 var feed
 var clock
 
-describe('External Feed test', function () {
+describe.skip('External Feed test', function () {
 
   var MINUTE = 60000
 
