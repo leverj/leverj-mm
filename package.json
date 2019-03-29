@@ -42,5 +42,8 @@
     "lerna": "^3.13.1",
     "sinon": "^7.3.0",
     "yarn-all-workspaces": "^1.0.0"
+  },
+  "resolutions": {
+    "js-yaml": "^3.13.0"
   }
 }

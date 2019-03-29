@@ -10,6 +10,7 @@ jobs:
     steps:
       - checkout
       - run: sudo npm install -g yarn
+      - run: sudo npm upgrade -g lerna
       - run: yarn install
       - run: yarn test
       - run: yarn audit
