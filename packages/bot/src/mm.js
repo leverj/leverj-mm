@@ -1,5 +1,5 @@
 const config = require("./config")
-const zka = require("zka")(config.baseUrl, "/api/v1")
+const zka = require("@leverj/zka")(config.baseUrl, "/api/v1")
 const orderAuthenticator = require("@leverj/adapter/src/OrderAdapter")
 const _ = require('lodash')
 const collarStrategy = require('./collarStrategy')
@@ -45,9 +45,21 @@ module.exports = (async function () {
     if (!baseUrl) return
     let socket = io(baseUrl, {rejectUnauthorized: true});
     socket.on(config.socketTopic, (_) => {
-      if(!_.price) return
+      if (!_.price) return
       indexPrice = _.price.toFixed(instrument().baseSignificantDigits) - 0
     })
+    socket.on("reconnect", onIndexReconnectEvent)
+    socket.on("connect_error", onIndexConnectEvent)
+    socket.on("connect_timeout", onIndexConnectEvent)
+    socket.on("disconnect", onIndexConnectEvent)
+    socket.on("reconnect_error", onIndexConnectEvent)
+    socket.on("reconnect_failed", onIndexConnectEvent)
+  }
+
+  const onIndexReconnectEvent = (data) => logger.log('index', 'reconnected')
+  const onIndexConnectEvent = (data) => {
+    indexPrice = undefined
+    logger.log('index', 'onConnectEvent', data instanceof Error ? data.message : data)
   }
 
   function newOrder(side, price, quantity) {
@@ -202,10 +214,12 @@ module.exports = (async function () {
   }
 
   function onReconnect(data) {
+    logger.log('exchange', 'reconnected')
     zka.socket.register()
   }
 
   function onConnectEvent(data) {
+    logger.log('exchange', 'onConnectEvent', data instanceof Error ? data.message : data)
   }
 
   function onError(data) {

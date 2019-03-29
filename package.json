@@ -33,6 +33,7 @@
     "publish:up": "lerna version $up --exact --git-tag-version --push --yes && lerna publish from-git --yes"
   },
   "devDependencies": {
+    "@leverj/test-utils": "0.0.4",
     "del": "^4.0.0",
     "expect.js": "^0.3.1",
     "fixtures.js": "^2.1.0",
@@ -41,5 +42,8 @@
     "lerna": "^3.13.1",
     "sinon": "^7.3.0",
     "yarn-all-workspaces": "^1.0.0"
+  },
+  "resolutions": {
+    "js-yaml": "^3.13.0"
   }
 }

@@ -1,6 +1,6 @@
 {
   "name": "@leverj/index",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "External spot price use by leverj exchange / bot",
   "license": "MIT",
   "scripts": {
@@ -9,7 +9,7 @@
   },
   "author": "leverj",
   "dependencies": {
-    "@leverj/logger": "0.0.3",
+    "@leverj/logger": "0.0.4",
     "affirm.js": "^1.0.0",
     "autobahn": "^18.10.2",
     "bluebird": "^3.5.3",

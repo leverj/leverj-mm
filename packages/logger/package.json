@@ -1,11 +1,11 @@
 {
   "name": "@leverj/logger",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "main": "src/index.js",
   "description": "very simple logger",
   "license": "MIT",
   "scripts": {
-    "test": "NODE_ENV=test mocha --recursive --exit specs"
+    "test": "echo NO TESTS"
   },
   "private": false,
   "author": "leverj"
