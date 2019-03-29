@@ -1,0 +1,12 @@
+{
+  "name": "@leverj/logger",
+  "version": "0.0.3",
+  "main": "src/index.js",
+  "description": "very simple logger",
+  "license": "MIT",
+  "scripts": {
+    "test": "NODE_ENV=test mocha --recursive --exit specs"
+  },
+  "private": false,
+  "author": "leverj"
+}

@@ -12,5 +12,7 @@
   "step": "STEP",
   "spread": "SPREAD",
   "startPrice": "START_PRICE",
-  "startSide": "START_SIDE"
+  "startSide": "START_SIDE",
+  "socketUrl": "SOCKET_URL",
+  "socketTopic": "SOCKET_TOPIC"
 }

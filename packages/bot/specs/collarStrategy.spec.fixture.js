@@ -161,6 +161,16 @@ module.exports = function () {
         toBeRemoved: getOrders([8.1, 8.2], [8.7,8.7])
       }
     },
+    {
+      description: "13: No sides",
+      orders: [],
+      executionPrice: 8,
+      executionSide: undefined,
+      result: {
+        toBeAdded: toObj([7.8, 7.7, 7.6], [8.2, 8.3, 8.4]),
+        toBeRemoved: []
+      }
+    },
   ]
 
   return {config, tests}

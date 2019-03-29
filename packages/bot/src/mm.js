@@ -3,12 +3,16 @@ const zka = require("zka")(config.baseUrl, "/api/v1")
 const orderAuthenticator = require("@leverj/adapter/src/OrderAdapter")
 const _ = require('lodash')
 const collarStrategy = require('./collarStrategy')
+const io = require('socket.io-client');
+const logger = require("@leverj/logger")
 
 module.exports = (async function () {
   const SKEW = 0.2
   let instruments = {}
   let leverjConfig = {}
   let readOnly = false
+  let collarWorking, lastPrice, lastSide
+  let indexPrice
   let orders = {}
   const strategy = {
     COLLAR: doCollarStrategy,
@@ -26,21 +30,32 @@ module.exports = (async function () {
     instruments = allConfig.instruments
     const allOrders = await zka.rest.get("/order")
     allOrders.forEach(order => {
-      if(order.instrument === config.symbol)
+      if (order.instrument === config.symbol)
         orders[order.uuid] = order
     })
+    connectToIndexes()
     listen()
     await setLastPriceAndSide()
     strategy[config.strategy]()
   }
 
 
+  function connectToIndexes() {
+    const baseUrl = config.socketUrl
+    if (!baseUrl) return
+    let socket = io(baseUrl, {rejectUnauthorized: true});
+    socket.on(config.socketTopic, (_) => {
+      if(!_.price) return
+      indexPrice = _.price.toFixed(instrument().baseSignificantDigits) - 0
+    })
+  }
+
   function newOrder(side, price, quantity) {
     let order = {
       orderType: 'LMT',
       side,
-      price: price.toFixed(instrument().significantEtherDigits) - 0,
-      quantity: quantity.toFixed(instrument().significantTokenDigits) - 0,
+      price: price.toFixed(instrument().baseSignificantDigits) - 0,
+      quantity: quantity.toFixed(instrument().quoteSignificantDigits) - 0,
       timestamp: Date.now() * 1e3,
       accountId: config.accountId,
       token: instrument().address,
@@ -66,11 +81,11 @@ module.exports = (async function () {
   function setPriceAndSide(price, side) {
     lastSide = toMakerSide(side)
     lastPrice = price
-    console.log(formattedDate(), 'last price and side', price, side)
+    logger.log('last price and side', price, side)
   }
 
 // collar strategy ##########################################################################################
-  let collarWorking, lastPrice, lastSide
+
 
   async function doCollarStrategy() {
     collarStrategy.setConfig(config)
@@ -94,9 +109,9 @@ module.exports = (async function () {
     try {
       if (config.strategy !== "COLLAR") return
       clearTimeout(collarTimer)
-      collarTimer = setTimeout(() => removeAndAddOrders().catch(console.error), 500)
+      collarTimer = setTimeout(() => removeAndAddOrders().catch(logger.log), 500)
     } catch (e) {
-      console.error(e)
+      logger.log(e)
     }
   }
 
@@ -104,20 +119,29 @@ module.exports = (async function () {
     if (collarWorking) return
     collarWorking = true
     try {
-      console.log(formattedDate(), "removeAndAddOrders", lastPrice, lastSide)
-      let {toBeAdded, toBeRemoved} = collarStrategy.getOrdersToBeAddedAndDeleted(Object.values(orders), lastPrice, lastSide);
+      logger.log("removeAndAddOrders", {indexPrice, lastPrice, lastSide})
+      let {toBeAdded, toBeRemoved} = getOrdersToBeAddedAndDeleted()
       const newOrders = toBeAdded.map(each => newOrder(each.side, each.price, config.quantity))
       let patch = []
       if (toBeRemoved.length) patch.push({op: 'remove', value: toBeRemoved.map(order => order.uuid)})
       if (newOrders.length) patch.push({op: 'add', value: newOrders})
       if (patch.length) {
-        console.log(formattedDate(), "sending patch", "add", newOrders.map(order=> order.price), "remove", toBeRemoved.map(order => order.uuid))
+        logger.log("sending patch", "add", newOrders.map(order => order.price), "remove", toBeRemoved.map(order => order.uuid))
         await zka.rest.patch("/order", {}, patch)
       }
     } catch (e) {
-      console.error(e)
+      logger.log(e)
     }
     collarWorking = false
+  }
+
+  function getOrdersToBeAddedAndDeleted() {
+    if (config.socketUrl) {
+      if (indexPrice) return collarStrategy.getOrdersToBeAddedAndDeleted(Object.values(orders), indexPrice)
+      else return {toBeAdded: [], toBeRemoved: []}
+    } else {
+      return collarStrategy.getOrdersToBeAddedAndDeleted(Object.values(orders), lastPrice, lastSide);
+    }
   }
 
 // socket connections ##########################################################################################
@@ -168,7 +192,7 @@ module.exports = (async function () {
     const result = response.result;
     for (let i = 0; i < result.length; i++) {
       const eachResponse = result[i];
-      if (eachResponse.error) return console.log(eachResponse.error)
+      if (eachResponse.error) return logger.log(eachResponse.error)
       PATCH_OPS[eachResponse.op]({result: eachResponse.response})
     }
   }
@@ -205,7 +229,7 @@ module.exports = (async function () {
   function printConfig() {
     let config1 = Object.assign({}, config)
     config1.secret = "##############################"
-    console.log(config1)
+    logger.log(config1)
   }
 
   // Random Strategy ##########################################################################################
@@ -221,9 +245,9 @@ module.exports = (async function () {
       let ask = randomPrice(lastPrice)
       let buy = newOrder('buy', applyRange(bid, config.priceRange), randomQty(config.quantity))
       let sell = newOrder('sell', applyRange(ask, config.priceRange), randomQty(config.quantity))
-      zka.rest.post('/order', {}, [buy, sell]).catch(console.error)
+      zka.rest.post('/order', {}, [buy, sell]).catch(logger.log)
     } catch (e) {
-      console.error(e)
+      logger.log(e)
     }
   }
 
@@ -247,7 +271,7 @@ module.exports = (async function () {
 
   async function cancelRandomOrders() {
     let orderList = await zka.rest.get('/order')
-    console.log(orderList.length)
+    logger.log(orderList.length)
     if (orderList.length > config.max) {
       let toBeRemoved = orderList.slice(config.min, config.min + 100)
       await zka.rest.patch("/order", {}, [{op: 'remove', value: toBeRemoved.map(order => order.uuid)}])
@@ -259,5 +283,5 @@ module.exports = (async function () {
     return instruments[config.symbol]
   }
 
-  start().catch(console.error)
-})().catch(console.error)
+  start().catch(logger.log)
+})().catch(logger.log)

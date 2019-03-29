@@ -23,6 +23,8 @@ module.exports = (function () {
     spread: config.spread - 0,
     startPrice: config.startPrice - 0,
     startSide: config.startSide,
-    strategy: config.strategy
+    strategy: config.strategy,
+    socketUrl: config.socketUrl,
+    socketTopic: config.socketTopic,
   }
 })()
