@@ -10,8 +10,10 @@ jobs:
     steps:
       - checkout
       - run: sudo npm install -g yarn
-      - run: yarn install --frozen-lockfile
+      - run: sudo npm upgrade -g lerna
+      - run: yarn install
       - run: yarn test
+      - run: yarn audit
       - setup_remote_docker:
           docker_layer_caching: true
       - run: |
