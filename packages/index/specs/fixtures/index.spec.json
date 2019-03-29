@@ -1,0 +1,48 @@
+{
+  "connected": {
+    "components" : [
+      {
+        "name": "mock1",
+        "socketModule": "./feeder"
+      }
+    ],
+    "price": 100.3,
+    "ticksize": 1,
+    "provider": "mock1"
+  },
+  "unconnected": {
+    "components" : [
+      {
+        "name": "mock1",
+        "socketModule": "./feeder",
+        "url":"https://api.example.com/v1/pubticker/btcusd",
+        "path":["last_price"]
+      }
+    ],
+    "price": 100.3,
+    "ticksize": 1,
+    "provider": "mock1"
+  },
+  "get": {
+    "https://api.example.com/v1/pubticker/btcusd" : {
+      "body":{"last_price": 100.3}
+    }
+  },
+  "expiredsocket": {
+    "components" : [
+      {
+        "name": "mock1",
+        "socketModule": "./feeder",
+        "url":"https://api.example.com/v1/pubticker/btcusd",
+        "path":["last_price"]
+      }
+    ],
+    "name": "mock1",
+    "socketPrice": 100.5,
+    "restPrice": 100.3,
+    "ticksize": 1,
+    "provider": "mock1"
+
+  }
+
+}
