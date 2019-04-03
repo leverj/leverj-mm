@@ -64,7 +64,7 @@ module.exports = {
           "inverse": true
         }, {
           "name": "fatbtc",
-          "url": () => `https://www.fatbtc.com/m/allticker/1/${Date.now()}`,
+          "url": () => `https://www.fatbtc.us/m/allticker/${Date.now()}`,
           price: fatbtcPrice,
           "frequency": 1000,
           "inverse": true
