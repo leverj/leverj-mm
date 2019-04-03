@@ -139,7 +139,8 @@ module.exports = (async function () {
       if (newOrders.length) patch.push({op: 'add', value: newOrders})
       if (patch.length) {
         logger.log("sending patch", "add", newOrders.map(order => order.price), "remove", toBeRemoved.map(order => order.uuid))
-        await zka.rest.patch("/order", {}, patch)
+        zka.socket.send({method: "PATCH", uri: "/order", body: patch})
+        // await zka.rest.patch("/order", {}, patch)
       }
     } catch (e) {
       logger.log(e)
