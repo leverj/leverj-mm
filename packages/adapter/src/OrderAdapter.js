@@ -34,7 +34,7 @@ module.exports = function () {
     affirm(pair.symbol === order.instrument, 'pair must be same as order instrument')
     affirm(typeof order.timestamp === 'number', 'Invalid timestamp')
     const quantity = auth.toBN(order.quantity, pair.quote.decimals);
-    const price     = auth.toBN(order.price, pair.base.decimals).div(new BN(Math.pow(10, pair.quote.decimals).toString(10)));
+    const price = auth.toBN(order.price, pair.base.decimals).div(new BN(Math.pow(10, pair.quote.decimals).toString(10)));
     const timestamp = new BN(order.timestamp);
     const id = new BN(order.clientOrderId);
     const orderType = new BN(ORDER_TYPE_MAP[order.orderType]);
@@ -43,7 +43,7 @@ module.exports = function () {
   }
 
   auth.toBN = function (number, decimalPlaces) {
-    affirm(decimalPlaces === 0 || decimalPlaces, 'decimal places must be provided' )
+    affirm(decimalPlaces === 0 || decimalPlaces, 'decimal places must be provided')
     affirm(typeof number === 'number', 'Invalid number')
     affirm(typeof decimalPlaces === 'number' && decimalPlaces >= 0 && decimalPlaces <= 18, 'invalid decimalPlaces')
     const asWei = new BN(toWei(mathUtil.noExponents(number), 'ether'))
