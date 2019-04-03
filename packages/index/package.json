@@ -3,6 +3,7 @@
   "version": "0.0.4",
   "description": "External spot price use by leverj exchange / bot",
   "license": "MIT",
+  "private": true,
   "scripts": {
     "test": "NODE_ENV=test mocha --recursive --exit specs",
     "docker": ""
