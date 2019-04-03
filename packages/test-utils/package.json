@@ -1,6 +1,6 @@
 {
   "name": "@leverj/test-utils",
-  "version": "0.0.4",
+  "version": "0.1.0",
   "description": "convenient methods for testing ",
   "main": "index.js",
   "scripts": {

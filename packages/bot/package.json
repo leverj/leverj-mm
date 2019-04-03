@@ -1,6 +1,6 @@
 {
   "name": "@leverj/bot",
-  "version": "0.0.4",
+  "version": "0.1.0",
   "description": "Leverj Market Maker / bot",
   "license": "MIT",
   "private": true,
@@ -9,9 +9,9 @@
   },
   "author": "leverj",
   "dependencies": {
-    "@leverj/adapter": "0.0.4",
-    "@leverj/logger": "0.0.4",
-    "@leverj/zka": "0.0.4",
+    "@leverj/adapter": "0.1.0",
+    "@leverj/logger": "0.1.0",
+    "@leverj/zka": "0.1.0",
     "affirm.js": "^1.0.0",
     "config": "^3.0.1",
     "lodash": "^4.17.11",
