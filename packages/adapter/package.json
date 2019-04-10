@@ -15,7 +15,7 @@
   ],
   "author": "leverj",
   "dependencies": {
-    "@leverj/gluon-plasma.exchange": "0.41.19",
+    "@leverj/gluon-plasma.exchange": "0.41.22",
     "affirm.js": "^1.0.0"
   }
 }
