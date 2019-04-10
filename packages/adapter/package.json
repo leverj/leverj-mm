@@ -1,12 +1,11 @@
 {
   "name": "@leverj/adapter",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "common utilities used in leverj exchange",
   "license": "MIT",
   "scripts": {
     "test": "NODE_ENV=test mocha --recursive --exit specs"
   },
-  "private": false,
   "keywords": [
     "leverj",
     "web3",

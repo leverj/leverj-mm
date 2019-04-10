@@ -9,7 +9,7 @@
   },
   "author": "leverj",
   "dependencies": {
-    "@leverj/adapter": "0.1.1",
+    "@leverj/adapter": "0.1.2",
     "@leverj/logger": "0.1.2",
     "@leverj/zka": "0.1.2",
     "affirm.js": "^1.0.0",
