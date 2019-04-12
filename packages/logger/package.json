@@ -5,7 +5,7 @@
   "description": "very simple logger",
   "license": "MIT",
   "scripts": {
-    "test": "echo NO TESTS"
+    "test": "NODE_ENV=test mocha --recursive --exit specs"
   },
   "author": "leverj"
 }
