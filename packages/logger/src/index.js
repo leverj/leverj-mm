@@ -5,6 +5,10 @@ module.exports = function(){
     console.log(new Date().toISOString(), ...messages)
   }
 
+  logger.error = function (...messages) {
+    console.error(new Date().toISOString(), ...messages)
+  }
+
   logger.time = function(...logs){
     const start = Date.now()
     const executor = {}
