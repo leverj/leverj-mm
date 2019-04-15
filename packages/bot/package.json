@@ -17,5 +17,8 @@
     "lodash": "^4.17.11",
     "rest.js": "^0.2.1",
     "sinful-math.js": "^0.0.3"
+  },
+  "resolutions": {
+    "tar": "^4.4.8"
   }
 }

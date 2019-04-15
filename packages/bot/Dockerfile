@@ -6,6 +6,7 @@ RUN apt-get update && \
     apt-get install -y curl git && \
     cd dist && npm install -g yarn && \
     yarn install && \
+    yarn audit && \
     useradd leverj && \
     apt-get remove -y curl git && \
     rm -rf /var/lib/apt/lists/* && \
