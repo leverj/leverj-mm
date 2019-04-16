@@ -4,8 +4,6 @@
   "main": "src/index.js",
   "description": "very simple logger",
   "license": "MIT",
-  "scripts": {
-    "test": "NODE_ENV=test mocha --recursive --exit specs"
-  },
+  "scripts": {"test": "NODE_ENV=test mocha --recursive --exit specs"},
   "author": "leverj"
 }

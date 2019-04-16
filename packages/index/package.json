@@ -4,10 +4,7 @@
   "description": "External spot price use by leverj exchange / bot",
   "license": "MIT",
   "private": true,
-  "scripts": {
-    "test": "NODE_ENV=test mocha --recursive --exit specs",
-    "docker": ""
-  },
+  "scripts": {"test": "NODE_ENV=test mocha --recursive --exit specs"},
   "author": "leverj",
   "dependencies": {
     "@leverj/logger": "0.1.7",

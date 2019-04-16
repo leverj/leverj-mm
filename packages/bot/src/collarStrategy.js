@@ -1,5 +1,5 @@
 const affirm = require('affirm.js')
-const sinful = require("sinful-math.js")
+const sinful = require("@leverj/sinful-math")
 
 module.exports = function () {
   const fixed = {}
