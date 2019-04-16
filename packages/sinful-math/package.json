@@ -1,6 +1,6 @@
 {
   "name": "@leverj/sinful-math",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "Simple, safe floating point math.  Based on the Math portion of the sinful.js project at https://github.com/guipn/sinful.js",
   "main": "./index.js",
   "keywords": [
@@ -10,5 +10,7 @@
   ],
   "author": "leverj",
   "license": "MIT",
-  "scripts": {"test": "NODE_ENV=test mocha --recursive --exit specs"}
+  "scripts": {
+    "test": "NODE_ENV=test mocha --recursive --exit specs"
+  }
 }
