@@ -1,6 +1,6 @@
 {
   "name": "@leverj/adapter",
-  "version": "0.1.8",
+  "version": "0.1.10",
   "description": "common utilities used in leverj exchange",
   "license": "MIT",
   "scripts": {
