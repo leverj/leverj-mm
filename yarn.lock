@@ -622,10 +622,10 @@
     npmlog "^4.1.2"
     write-file-atomic "^2.3.0"
 
-"@leverj/gluon-plasma.common@0.41.22":
-  version "0.41.22"
-  resolved "https://registry.yarnpkg.com/@leverj/gluon-plasma.common/-/gluon-plasma.common-0.41.22.tgz#d75f78dba948f697338b070a33a7083cfe5acdbe"
-  integrity sha512-Zt4U2Q6uUqlXC9zsf8HI87ZDgNB+pXNyxSy5pPS4oIwaTVQpxOqKd4a7d2ijYii4oO9MxEptW6lBFgmL6KaHsg==
+"@leverj/gluon-plasma.common@0.41.23":
+  version "0.41.23"
+  resolved "https://registry.yarnpkg.com/@leverj/gluon-plasma.common/-/gluon-plasma.common-0.41.23.tgz#0f9d2e059eb846ebffb90cc0ea3807d14cd02cbe"
+  integrity sha512-4+DLAlCwV1/RQve8YKJhmvlpxVkrZltUadRupjdfnP0UAUI2l0Giz0JIAnlebDUy4/jygk2pHd3eJrXCzTUT6Q==
   dependencies:
     ethereumjs-util "^6.1.0"
     fixed-bn.js "^0.0.2"
@@ -634,12 +634,12 @@
     uuid-parse "^1.1.0"
     web3 "1.0.0-beta.37"
 
-"@leverj/gluon-plasma.exchange@0.41.22":
-  version "0.41.22"
-  resolved "https://registry.yarnpkg.com/@leverj/gluon-plasma.exchange/-/gluon-plasma.exchange-0.41.22.tgz#5d9a1d2a2017e1f5e1bb6e814e9f611d132a2b32"
-  integrity sha512-9J+fDeA6BrnZtv3oPxxuNkT2QTwXSl9ZYi8drXEM8RDp94jCfj4JicTNgzLA/Eugec6VGUtdCplRhSVo8h70CQ==
+"@leverj/gluon-plasma.exchange@0.41.23":
+  version "0.41.23"
+  resolved "https://registry.yarnpkg.com/@leverj/gluon-plasma.exchange/-/gluon-plasma.exchange-0.41.23.tgz#a018dc726e6e34c61f07853262aba3675cbe62f4"
+  integrity sha512-IEw8jEiQu0hOIdn76VEKgcHv/MjJSalRMCtUb5TFmjXBBXRPGGoLRdt3Z4YCELPhJGYo1/dzHmW7462tnqnQjg==
   dependencies:
-    "@leverj/gluon-plasma.common" "0.41.22"
+    "@leverj/gluon-plasma.common" "0.41.23"
 
 "@leverj/test-utils@0.1.2":
   version "0.1.2"
