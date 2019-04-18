@@ -641,6 +641,11 @@
   dependencies:
     "@leverj/gluon-plasma.common" "0.41.22"
 
+"@leverj/test-utils@0.1.2":
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/@leverj/test-utils/-/test-utils-0.1.2.tgz#d0ab31be2823c9a888ed4212a479b150ca21c68e"
+  integrity sha512-5OYYCUOgfq+eMnlMHH9s10FYUnAuHAHxZc7rNev/9jNacBqTPLjCpZglFuuiIvCI2Uqg3VilQVqvX3slY8KLJw==
+
 "@mrmlnc/readdir-enhanced@^2.2.1":
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/@mrmlnc/readdir-enhanced/-/readdir-enhanced-2.2.1.tgz#524af240d1a360527b730475ecfa1344aa540dde"

@@ -8,15 +8,14 @@
   // effectively eliminating miscalculations caused by
   // finite precision.
 
-  function multiplier(x) {
+  function decimals(x) {
     const converted = x.toFixed && x < 1e-6 ? x.toFixed(15).replace(/(\..*?)(0+)$/, "$1") : x.toString();
     const parts = converted.split('.');
+    return parts.length < 2 ? 0 : parts[1].length
+  }
 
-    if (parts.length < 2) {
-      return 1;
-    }
-
-    return Math.pow(10, parts[1].length);
+  function multiplier(x) {
+    return Math.pow(10, decimals(x));
   }
 
   // Given a variable number of arguments, returns the maximum
@@ -111,10 +110,11 @@
     }
   };
 
-  sinfulMath['subtract'] = sinfulMath['sub'];
-  sinfulMath['multiply'] = sinfulMath['mul'];
-  sinfulMath['divide']   = sinfulMath['div'];
-  sinfulMath['multiplier'] = multiplier
+  sinfulMath.subtract = sinfulMath.sub;
+  sinfulMath.multiply = sinfulMath.mul;
+  sinfulMath.divide = sinfulMath.div;
+  sinfulMath.multiplier = multiplier
+  sinfulMath.decimals = decimals
 
   // Node/CommonJS
   if (typeof module !== 'undefined' && module.exports) {
