@@ -133,7 +133,7 @@ module.exports = (async function () {
     try {
       logger.log("removeAndAddOrders", {indexPrice, lastPrice, lastSide})
       let {toBeAdded, toBeRemoved} = getOrdersToBeAddedAndDeleted()
-      const newOrders = toBeAdded.map(each => newOrder(each.side, each.price, config.quantity))
+      const newOrders = toBeAdded.filter(each=>each.price > 0).map(each => newOrder(each.side, each.price, config.quantity))
       let patch = []
       if (toBeRemoved.length) patch.push({op: 'remove', value: toBeRemoved.map(order => order.uuid)})
       if (newOrders.length) patch.push({op: 'add', value: newOrders})
