@@ -1,6 +1,6 @@
 const config = require("./config")
 const zka = require("@leverj/zka")(config.baseUrl, "/api/v1")
-const orderAuthenticator = require("@leverj/adapter/src/OrderAdapter")
+const adapter = require("@leverj/adapter/src/OrderAdapter")
 const _ = require('lodash')
 const collarStrategy = require('./collarStrategy')
 const io = require('socket.io-client');
@@ -73,7 +73,7 @@ module.exports = (async function () {
       token: instrument().address,
       instrument: instrument().symbol
     }
-    order.signature = orderAuthenticator.sign(order, instrument(), config.secret)
+    order.signature = adapter.sign(order, instrument(), config.secret)
     return order
   }
 
@@ -133,7 +133,7 @@ module.exports = (async function () {
     try {
       logger.log("removeAndAddOrders", {indexPrice, lastPrice, lastSide})
       let {toBeAdded, toBeRemoved} = getOrdersToBeAddedAndDeleted()
-      const newOrders = toBeAdded.map(each => newOrder(each.side, each.price, config.quantity))
+      const newOrders = toBeAdded.filter(each=>each.price > 0).map(each => newOrder(each.side, each.price, config.quantity))
       let patch = []
       if (toBeRemoved.length) patch.push({op: 'remove', value: toBeRemoved.map(order => order.uuid)})
       if (newOrders.length) patch.push({op: 'add', value: newOrders})
