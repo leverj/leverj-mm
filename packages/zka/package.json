@@ -1,8 +1,11 @@
 {
   "name": "@leverj/zka",
-  "version": "0.0.4",
+  "version": "0.1.8",
   "description": "zero knowledge authentication and api keys",
   "main": "index.js",
+  "scripts": {
+    "test": "NODE_ENV=test mocha --recursive --exit specs"
+  },
   "keywords": [
     "leverj",
     "auth",

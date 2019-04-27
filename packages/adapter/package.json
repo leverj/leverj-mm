@@ -1,12 +1,11 @@
 {
   "name": "@leverj/adapter",
-  "version": "0.0.4",
+  "version": "0.1.10",
   "description": "common utilities used in leverj exchange",
   "license": "MIT",
   "scripts": {
     "test": "NODE_ENV=test mocha --recursive --exit specs"
   },
-  "private": false,
   "keywords": [
     "leverj",
     "web3",
@@ -15,7 +14,7 @@
   ],
   "author": "leverj",
   "dependencies": {
-    "@leverj/gluon-plasma.exchange": "0.41.16",
+    "@leverj/gluon-plasma.exchange": "0.41.23",
     "affirm.js": "^1.0.0"
   }
 }
