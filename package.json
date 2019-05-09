@@ -44,6 +44,9 @@
     "yarn-all-workspaces": "^1.0.0"
   },
   "resolutions": {
-    "js-yaml": "^3.13.0"
+    "handlebars": "^4.1.2",
+    "js-yaml": "^3.13.1",
+    "tar": "^4.4.2",
+    "node-gyp": "^4.0.0"
   }
 }

@@ -13,7 +13,7 @@ jobs:
       - run: sudo npm upgrade -g lerna
       - run: yarn install
       - run: yarn test
-# fixme     - run: yarn audit
+      - run: yarn audit
       - setup_remote_docker:
           docker_layer_caching: true
       - run: |
