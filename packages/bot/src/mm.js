@@ -160,7 +160,7 @@ module.exports = (async function () {
 // socket connections ##########################################################################################
   function listen() {
     const eventMap = {
-      readonly: onReadOnly,
+      config: onConfig,
       reconnect: onReconnect,
       connect_error: onConnectEvent,
       connect_timeout: onConnectEvent,
@@ -193,7 +193,7 @@ module.exports = (async function () {
   }
 
   function onOrderDel(response) {
-    response.result.forEach(uuid => delete orders[uuid])
+    delete orders[response.result]
   }
 
   const PATCH_OPS = {
@@ -210,8 +210,8 @@ module.exports = (async function () {
     }
   }
 
-  function onReadOnly(data) {
-    readOnly = data.readonly
+  function onConfig(data) {
+    leverjConfig = data
   }
 
   function onReconnect(data) {
@@ -254,7 +254,7 @@ module.exports = (async function () {
   }
 
   async function createRandomOrders() {
-    if (readOnly) return
+    if (leverjConfig.maintenance || leverjConfig.tradingDisabled) return
     try {
       let bid = randomPrice(lastPrice)
       let ask = randomPrice(lastPrice)
