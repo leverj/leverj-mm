@@ -665,6 +665,14 @@
   resolved "https://registry.yarnpkg.com/@leverj/sinful-math/-/sinful-math-0.1.21.tgz#8f6900422742593359f6e23bc1eb93af28538b8c"
   integrity sha512-bK7Vuw/I59HKSNq+GRWy57GGP8KS2rqvHSRpav5N5Ygbi8xUsfPDzKFOBP1hcC4a1DhaEbigSKyuqN5wfa4wOQ==
 
+"@leverj/telegram@0.1.21":
+  version "0.1.21"
+  resolved "https://registry.yarnpkg.com/@leverj/telegram/-/telegram-0.1.21.tgz#5c6085bd4fd957c846a870706ee08c408cef6f0e"
+  integrity sha512-7lROAoD1JYsiQeGzkSf7EnxVLGRSxqFR1xkBfC+3oeHEGl8TG9FT5uQQH0zeJmkGVf9U5A0G/asi3TgavqdCgg==
+  dependencies:
+    "@leverj/logger" "0.1.21"
+    rest.js "^0.2.1"
+
 "@leverj/test-utils@0.1.2":
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/@leverj/test-utils/-/test-utils-0.1.2.tgz#d0ab31be2823c9a888ed4212a479b150ca21c68e"
