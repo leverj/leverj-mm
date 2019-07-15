@@ -1,0 +1,10 @@
+{
+  "name": "@leverj/exchange_python_bridge",
+  "version": "0.41.34-alpha.16",
+  "license": "MIT",
+  "author": "leverj",
+  "dependencies": {
+    "@leverj/adapter": "0.1.22",
+    "dashdash": "^1.14.1"
+  }
+}

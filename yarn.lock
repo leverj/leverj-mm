@@ -630,6 +630,14 @@
     "@leverj/gluon-plasma.exchange" "0.41.34-alpha.16"
     affirm.js "^1.0.0"
 
+"@leverj/adapter@0.1.22":
+  version "0.1.22"
+  resolved "https://registry.yarnpkg.com/@leverj/adapter/-/adapter-0.1.22.tgz#91a81f855d70c3edd5de349574e9d710d7a88dee"
+  integrity sha512-ES/twgA7YuvZqjO0WGcpFfExIpGLvp7PqEDPcMNYpMcw0G2kqWeRYEV4fVfQTg8FKlMhMqK9O2kEti7ZOkYqsQ==
+  dependencies:
+    "@leverj/gluon-plasma.exchange" "0.41.34-alpha.18"
+    affirm.js "^1.0.0"
+
 "@leverj/affirm@0.1.21":
   version "0.1.21"
   resolved "https://registry.yarnpkg.com/@leverj/affirm/-/affirm-0.1.21.tgz#5ff76f19c5d2293276cc6393bf7f97e515133a3e"
@@ -648,12 +656,32 @@
     uuid-parse "^1.1.0"
     web3 "1.0.0-beta.35"
 
+"@leverj/gluon-plasma.common@0.41.34-alpha.18":
+  version "0.41.34-alpha.18"
+  resolved "https://registry.yarnpkg.com/@leverj/gluon-plasma.common/-/gluon-plasma.common-0.41.34-alpha.18.tgz#2293ce78e1ecb554b66213799e5640f91601c541"
+  integrity sha512-8V33BpRVm216lLDDu6jf5NNGW9qUFNPGeZEvwEH+zpgmft8xXIUli4WkixDhu200oKS2EElIcG5jgYNgK9AbAQ==
+  dependencies:
+    ethereumjs-util "^6.1.0"
+    fixed-bn.js "^0.0.2"
+    immutable "^4.0.0-rc.12"
+    lodash "^4.17.11"
+    uuid "^3.3.2"
+    uuid-parse "^1.1.0"
+    web3 "1.0.0-beta.35"
+
 "@leverj/gluon-plasma.exchange@0.41.34-alpha.16":
   version "0.41.34-alpha.16"
   resolved "https://registry.yarnpkg.com/@leverj/gluon-plasma.exchange/-/gluon-plasma.exchange-0.41.34-alpha.16.tgz#014c6365230d49154f83ddf33980c995a725d2c4"
   integrity sha512-2XVvO8Gaz2MTiUHVLDJsW5UJWI337QGnGdpwlteMeW3vxMaFa2lf2l/YLVVmNThzCS0sAbdVWYy7TVivkwI2hg==
   dependencies:
     "@leverj/gluon-plasma.common" "0.41.34-alpha.16"
+
+"@leverj/gluon-plasma.exchange@0.41.34-alpha.18":
+  version "0.41.34-alpha.18"
+  resolved "https://registry.yarnpkg.com/@leverj/gluon-plasma.exchange/-/gluon-plasma.exchange-0.41.34-alpha.18.tgz#06417a5af66e8700d9d3d79f6167da2345688de2"
+  integrity sha512-/zUO/iuA/fSvjvCpfBeIIocCAzBgB4GZFBIlwA0BKHLkyeXDWXF4BvpTfeCD66njut3vARsV6o33m4RYxQbe+w==
+  dependencies:
+    "@leverj/gluon-plasma.common" "0.41.34-alpha.18"
 
 "@leverj/logger@0.1.21":
   version "0.1.21"
@@ -1869,7 +1897,7 @@ dargs@^4.0.1:
   dependencies:
     number-is-nan "^1.0.0"
 
-dashdash@^1.12.0:
+dashdash@^1.12.0, dashdash@^1.14.1:
   version "1.14.1"
   resolved "https://registry.yarnpkg.com/dashdash/-/dashdash-1.14.1.tgz#853cfa0f7cbe2fed5de20326b8dd581035f6e2f0"
   integrity sha1-hTz6D3y+L+1d4gMmuN1YEDX24vA=
@@ -4244,7 +4272,7 @@ minimist@~0.0.1:
   resolved "https://registry.yarnpkg.com/minimist/-/minimist-0.0.10.tgz#de3f98543dbf96082be48ad1a0c7cda836301dcf"
   integrity sha1-3j+YVD2/lggr5IrRoMfNqDYwHc8=
 
-minipass@^2.2.1, minipass@^2.3.4, minipass@^2.3.5:
+minipass@^2.2.1, minipass@^2.3.5:
   version "2.3.5"
   resolved "https://registry.yarnpkg.com/minipass/-/minipass-2.3.5.tgz#cacebe492022497f656b0f0f51e2682a9ed2d848"
   integrity sha512-Gi1W4k059gyRbyVUZQ4mEqLm0YIUiGYfvxhF6SIlk3ui1WVxMTGfGdQ2SInh3PDrRTVvPKgULkpJtT4RH10+VA==
@@ -4252,7 +4280,7 @@ minipass@^2.2.1, minipass@^2.3.4, minipass@^2.3.5:
     safe-buffer "^5.1.2"
     yallist "^3.0.0"
 
-minizlib@^1.1.1:
+minizlib@^1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/minizlib/-/minizlib-1.2.1.tgz#dd27ea6136243c7c880684e8672bb3a45fd9b614"
   integrity sha512-7+4oTUOWKg7AuL3vloEWekXY2/D20cevzsrNT2kGWm+39J9hGTCBv8VI5Pm5lXZ/o3/mdR4f8rflAPhnQb8mPA==
@@ -6217,17 +6245,17 @@ tar.gz@^1.0.5:
     tar "^2.1.1"
 
 tar@^2.1.1, tar@^4.4.2, tar@^4.4.8:
-  version "4.4.8"
-  resolved "https://registry.yarnpkg.com/tar/-/tar-4.4.8.tgz#b19eec3fde2a96e64666df9fdb40c5ca1bc3747d"
-  integrity sha512-LzHF64s5chPQQS0IYBn9IN5h3i98c12bo4NCO7e0sGM2llXQ3p2FGC5sdENN4cTW48O915Sh+x+EXx7XW96xYQ==
+  version "4.4.10"
+  resolved "https://registry.yarnpkg.com/tar/-/tar-4.4.10.tgz#946b2810b9a5e0b26140cf78bea6b0b0d689eba1"
+  integrity sha512-g2SVs5QIxvo6OLp0GudTqEf05maawKUxXru104iaayWA09551tFCTI8f1Asb4lPfkBr91k07iL4c11XO3/b0tA==
   dependencies:
     chownr "^1.1.1"
     fs-minipass "^1.2.5"
-    minipass "^2.3.4"
-    minizlib "^1.1.1"
+    minipass "^2.3.5"
+    minizlib "^1.2.1"
     mkdirp "^0.5.0"
     safe-buffer "^5.1.2"
-    yallist "^3.0.2"
+    yallist "^3.0.3"
 
 temp-dir@^1.0.0:
   version "1.0.0"
@@ -7005,7 +7033,7 @@ yallist@^2.1.2:
   resolved "https://registry.yarnpkg.com/yallist/-/yallist-2.1.2.tgz#1c11f9218f076089a47dd512f93c6699a6a81d52"
   integrity sha1-HBH5IY8HYImkfdUS+TxmmaaoHVI=
 
-yallist@^3.0.0, yallist@^3.0.2:
+yallist@^3.0.0, yallist@^3.0.2, yallist@^3.0.3:
   version "3.0.3"
   resolved "https://registry.yarnpkg.com/yallist/-/yallist-3.0.3.tgz#b4b049e314be545e3ce802236d6cd22cd91c3de9"
   integrity sha512-S+Zk8DEWE6oKpV+vI3qWkaK+jSbIK86pCwe2IF/xwIpQ8jEuxpw9NyaGjmp9+BoJv5FV2piqCDcoCtStppiq2A==
