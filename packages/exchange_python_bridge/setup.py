@@ -1,21 +1,26 @@
 from setuptools import setup, find_packages
 
 
-with open('README.md') as f:
+with open("README.md") as f:
   readme = f.read()
 
 setup(
-  name='exchange',
-  version='0.41.34',
-  description='Python bridge for Leverj.io Spot Exchange',
+  name="leverj_spot_exchange_bridge",
+#   version="0.1.22",
+  version="0.0.1",
+  description="Python bridge for Leverj.io Spot Exchange",
   long_description=readme,
+  long_description_content_type="text/markdown",
+  author="https://github.com/leverj/leverj-mm/leverj_spot_exchange_bridge",
+  url="https://leverj.io/",
   license="MIT",
-  packages=find_packages(exclude=('tests')),
-  include_package_data=True,
-  exclude_package_data={'': ['*.js']},
-
-  install_requires=['Naked', 'setuptools'],
-  setup_requires=['nose'],
-  test_suite='nose.collector')
-)
+  packages=find_packages(exclude=("tests")),
+  classifiers=[
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+  ],
+  install_requires=["Naked", "setuptools"],
+  setup_requires=["nose"],
+  test_suite="nose.collector")
 

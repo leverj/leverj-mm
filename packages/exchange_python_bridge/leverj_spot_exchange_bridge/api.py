@@ -1,9 +1,11 @@
 import json
 import os
 import sys
+# import subprocess
 from Naked.toolshed.shell import muterun_js
 
 api_js=os.path.join(os.path.dirname(__file__), 'api.js')
+# subprocess.Popen(["node", "npm", "install", "open"], shell=True)
 
 
 def run_js(command, arguments_as_dictionary):

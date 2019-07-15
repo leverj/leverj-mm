@@ -3,3 +3,20 @@
 #### description
 
 a python bridge to javascript libraries for the Gluon-Plasma based Leverj.io Spot DEX
+
+
+##### setup
+```shell
+$ source activate_env.sh
+```
+
+##### test
+```shell
+$ nosetests
+```
+
+##### build
+```shell
+$ python setup.py sdist
+```
+
