@@ -4,6 +4,16 @@ from setuptools import setup, find_packages
 with open("README.md") as f:
   readme = f.read()
 
+with open("package.json") as f:
+  package_json = f.read()
+
+# package_json = {
+#   "dependencies": {
+#     "@leverj/adapter": "0.1.22",
+#     "dashdash": "^1.14.1"
+#   }
+# }
+
 setup(
   name="leverj_spot_exchange_bridge",
 #   version="0.1.22",
@@ -21,6 +31,10 @@ setup(
     "Operating System :: OS Independent",
   ],
   install_requires=["Naked", "setuptools"],
-  setup_requires=["nose"],
+  setup_requires=["calmjs", "nose"],
+  extras_require={
+    "dev": ["calmjs", "nose"],
+  },
+  package_json=package_json,
   test_suite="nose.collector")
 

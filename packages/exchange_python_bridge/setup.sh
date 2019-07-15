@@ -7,5 +7,6 @@ source .env/python3/bin/activate
 pip install --upgrade pip
 pip install .
 
-# for testing
-pip install nose
+# for development
+pip install -e .[dev]
+python setup.py yarn --init

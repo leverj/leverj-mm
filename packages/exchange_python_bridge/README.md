@@ -7,7 +7,7 @@ a python bridge to javascript libraries for the Gluon-Plasma based Leverj.io Spo
 
 ##### setup
 ```shell
-$ source activate_env.sh
+$ source setup.sh
 ```
 
 ##### test
