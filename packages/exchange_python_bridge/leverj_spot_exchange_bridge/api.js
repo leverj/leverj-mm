@@ -1,5 +1,10 @@
 const dashdash = require('dashdash')
 const {Order, Pair} = require('@leverj/gluon-plasma.exchange/src/domain/v/2/orders')
+const orderAdapter = require('@leverj/adapter/src/OrderAdapter')
+
+const {BN2NumberString, Type} = require('@leverj/gluon-plasma.common/src/utils/transformers')
+const orderBNs = ['clientOrderId', 'id', 'timestamp', 'quantity', 'price', 'originatorTimestamp']
+const Order2Pojo = Type('BN', orderBNs, BN2NumberString)
 
 
 const usage = 'usage: node api.js --command <command> --args=<arguments-as-json-string>'
@@ -42,6 +47,8 @@ function exec(command, arguments) {
   switch (command) {
     case 'sign_order': return sign_order(arguments)
     case 'compute_signature_for_order': return compute_signature_for_order(arguments)
+    case 'compute_signature_for_exchange_order': return compute_signature_for_exchange_order(arguments)
+    case 'to_ledger_order': return to_ledger_order(arguments)
     default: throw Error(`unknown command: ${command}`)
   }
 }
@@ -58,4 +65,20 @@ function sign_order(arguments) {
 
 function compute_signature_for_order(arguments) {
   return {signature: sign_order(arguments).signature}
+}
+
+function compute_signature_for_exchange_order(arguments) {
+  const order = arguments.order
+  const instrument = arguments.instrument
+  const signer = arguments.signer
+  const signature = orderAdapter.sign(order, instrument, signer)
+  return {signature}
+}
+
+function to_ledger_order(arguments) {
+  const order = arguments.order
+  const instrument = arguments.instrument
+  const ledgerOrder = orderAdapter.getContractOrder2(order, instrument)
+  // return ledgerOrder
+  return Order2Pojo.map(ledgerOrder)
 }
