@@ -78,7 +78,7 @@ function compute_signature_for_exchange_order(arguments) {
 function to_ledger_order(arguments) {
   const order = arguments.order
   const instrument = arguments.instrument
-  const ledgerOrder = orderAdapter.getContractOrder2(order, instrument)
+  const ledgerOrder = orderAdapter.getContractOrder(order, instrument)
   // return ledgerOrder
   return Order2Pojo.map(ledgerOrder)
 }
