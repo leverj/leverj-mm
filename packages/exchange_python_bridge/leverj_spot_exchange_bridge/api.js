@@ -2,11 +2,6 @@ const dashdash = require('dashdash')
 const {Order, Pair} = require('@leverj/gluon-plasma.exchange/src/domain/v/2/orders')
 const orderAdapter = require('@leverj/adapter/src/OrderAdapter')
 
-const {BN2NumberString, Type} = require('@leverj/gluon-plasma.common/src/utils/transformers')
-const orderBNs = ['clientOrderId', 'id', 'timestamp', 'quantity', 'price', 'originatorTimestamp']
-const Order2Pojo = Type('BN', orderBNs, BN2NumberString)
-
-
 const usage = 'usage: node api.js --command <command> --args=<arguments-as-json-string>'
 const options = [
   {
@@ -72,12 +67,4 @@ function compute_signature_for_exchange_order(arguments) {
   const signer = arguments.signer
   const signature = orderAdapter.sign(order, instrument, signer)
   return {signature}
-}
-
-function to_ledger_order(arguments) {
-  const order = arguments.order
-  const instrument = arguments.instrument
-  const ledgerOrder = orderAdapter.getContractOrder(order, instrument)
-  // return ledgerOrder
-  return Order2Pojo.map(ledgerOrder)
 }
