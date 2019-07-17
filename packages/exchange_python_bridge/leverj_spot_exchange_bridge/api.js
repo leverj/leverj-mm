@@ -48,7 +48,6 @@ function exec(command, arguments) {
     case 'sign_order': return sign_order(arguments)
     case 'compute_signature_for_order': return compute_signature_for_order(arguments)
     case 'compute_signature_for_exchange_order': return compute_signature_for_exchange_order(arguments)
-    case 'to_ledger_order': return to_ledger_order(arguments)
     default: throw Error(`unknown command: ${command}`)
   }
 }

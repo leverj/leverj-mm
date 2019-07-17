@@ -59,39 +59,15 @@ sell = {
 }
 
 
-def test_to_gluon_order():
-  command = 'to_ledger_order'
-  arguments = {'order': buy['order'], 'instrument': instrument}
-  result = run_js(command, arguments)
-  assert_equal(int(result['quantity']), buy['order']['quantity'] * 1e+9)
-  assert_equal(int(result['price']), buy['order']['price'])
-  assert_equal(int(result['originatorTimestamp']), buy['order']['timestamp'])
-  print('>>>>> buy')
-  print(result)
-
-  arguments = {'order': sell['order'], 'instrument': instrument}
-  result = run_js(command, arguments)
-  assert_equal(int(result['quantity']), sell['order']['quantity'] * 1e+9)
-  assert_equal(int(result['price']), sell['order']['price'])
-  assert_equal(int(result['originatorTimestamp']), sell['order']['timestamp'])
-  print('>>>>> sell')
-  print(result)
-
-def xtest_compute_signature_for_exchange_order():
+def test_compute_signature_for_exchange_order():
   command = 'compute_signature_for_exchange_order'
 
   arguments = {'order': buy['order'], 'instrument': instrument, 'signer': buy['signer']}
   result = run_js(command, arguments)
-#   assert_equal(result['signature'], buy['signature'])
-#   assert_not_equal(result['signature'], sell['signature'])
-  print('>>>>> buy')
-  print('expeted:', buy['signature'])
-  print('actual: ', result['signature'])
+  assert_equal(result['signature'], buy['signature'])
+  assert_not_equal(result['signature'], sell['signature'])
 
   arguments = {'order': sell['order'], 'instrument': instrument, 'signer': sell['signer']}
   result = run_js(command, arguments)
-#   assert_equal(result['signature'], sell['signature'])
-#   assert_not_equal(result['signature'], buy['signature'])
-  print('>>>>> sell')
-  print('expeted:', sell['signature'])
-  print('actual: ', result['signature'])
+  assert_equal(result['signature'], sell['signature'])
+  assert_not_equal(result['signature'], buy['signature'])
