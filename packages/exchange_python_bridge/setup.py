@@ -30,7 +30,7 @@ setup(
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
   ],
-  install_requires=["Naked", "setuptools"],
+  install_requires=["setuptools"],
   setup_requires=["calmjs", "nose"],
   extras_require={
     "dev": ["calmjs", "nose"],

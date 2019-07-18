@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 const dashdash = require('dashdash')
 const {Order, Pair} = require('@leverj/gluon-plasma.exchange/src/domain/v/2/orders')
 const orderAdapter = require('@leverj/adapter/src/OrderAdapter')
