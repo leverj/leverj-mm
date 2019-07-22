@@ -630,14 +630,6 @@
     "@leverj/gluon-plasma.exchange" "0.41.34-alpha.16"
     affirm.js "^1.0.0"
 
-"@leverj/adapter@0.1.22":
-  version "0.1.22"
-  resolved "https://registry.yarnpkg.com/@leverj/adapter/-/adapter-0.1.22.tgz#91a81f855d70c3edd5de349574e9d710d7a88dee"
-  integrity sha512-ES/twgA7YuvZqjO0WGcpFfExIpGLvp7PqEDPcMNYpMcw0G2kqWeRYEV4fVfQTg8FKlMhMqK9O2kEti7ZOkYqsQ==
-  dependencies:
-    "@leverj/gluon-plasma.exchange" "0.41.34-alpha.18"
-    affirm.js "^1.0.0"
-
 "@leverj/affirm@0.1.21":
   version "0.1.21"
   resolved "https://registry.yarnpkg.com/@leverj/affirm/-/affirm-0.1.21.tgz#5ff76f19c5d2293276cc6393bf7f97e515133a3e"
@@ -656,32 +648,12 @@
     uuid-parse "^1.1.0"
     web3 "1.0.0-beta.35"
 
-"@leverj/gluon-plasma.common@0.41.34-alpha.18":
-  version "0.41.34-alpha.18"
-  resolved "https://registry.yarnpkg.com/@leverj/gluon-plasma.common/-/gluon-plasma.common-0.41.34-alpha.18.tgz#2293ce78e1ecb554b66213799e5640f91601c541"
-  integrity sha512-8V33BpRVm216lLDDu6jf5NNGW9qUFNPGeZEvwEH+zpgmft8xXIUli4WkixDhu200oKS2EElIcG5jgYNgK9AbAQ==
-  dependencies:
-    ethereumjs-util "^6.1.0"
-    fixed-bn.js "^0.0.2"
-    immutable "^4.0.0-rc.12"
-    lodash "^4.17.11"
-    uuid "^3.3.2"
-    uuid-parse "^1.1.0"
-    web3 "1.0.0-beta.35"
-
 "@leverj/gluon-plasma.exchange@0.41.34-alpha.16":
   version "0.41.34-alpha.16"
   resolved "https://registry.yarnpkg.com/@leverj/gluon-plasma.exchange/-/gluon-plasma.exchange-0.41.34-alpha.16.tgz#014c6365230d49154f83ddf33980c995a725d2c4"
   integrity sha512-2XVvO8Gaz2MTiUHVLDJsW5UJWI337QGnGdpwlteMeW3vxMaFa2lf2l/YLVVmNThzCS0sAbdVWYy7TVivkwI2hg==
   dependencies:
     "@leverj/gluon-plasma.common" "0.41.34-alpha.16"
-
-"@leverj/gluon-plasma.exchange@0.41.34-alpha.18":
-  version "0.41.34-alpha.18"
-  resolved "https://registry.yarnpkg.com/@leverj/gluon-plasma.exchange/-/gluon-plasma.exchange-0.41.34-alpha.18.tgz#06417a5af66e8700d9d3d79f6167da2345688de2"
-  integrity sha512-/zUO/iuA/fSvjvCpfBeIIocCAzBgB4GZFBIlwA0BKHLkyeXDWXF4BvpTfeCD66njut3vARsV6o33m4RYxQbe+w==
-  dependencies:
-    "@leverj/gluon-plasma.common" "0.41.34-alpha.18"
 
 "@leverj/logger@0.1.21":
   version "0.1.21"
@@ -1897,7 +1869,7 @@ dargs@^4.0.1:
   dependencies:
     number-is-nan "^1.0.0"
 
-dashdash@^1.12.0, dashdash@^1.14.1:
+dashdash@^1.12.0:
   version "1.14.1"
   resolved "https://registry.yarnpkg.com/dashdash/-/dashdash-1.14.1.tgz#853cfa0f7cbe2fed5de20326b8dd581035f6e2f0"
   integrity sha1-hTz6D3y+L+1d4gMmuN1YEDX24vA=
