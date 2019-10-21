@@ -9,20 +9,20 @@
   },
   "author": "leverj",
   "dependencies": {
-    "@leverj/logger": "1.0.1",
-    "@leverj/affirm": "1.0.1",
-    "@leverj/telegram": "1.0.1",
-    "autobahn": "^18.10.2",
-    "bluebird": "^3.5.3",
-    "config": "^3.0.1",
-    "lodash": "^4.17.11",
+    "@leverj/logger": "1.1.2",
+    "@leverj/affirm": "1.1.2",
+    "@leverj/telegram": "1.1.2",
+    "autobahn": "^19.10.1",
+    "bluebird": "^3.7.1",
+    "config": "^3.2.3",
+    "lodash": "^4.17.15",
     "mangler": "^1.0.4",
     "median": "^0.0.2",
     "pusher-client": "^1.1.0",
     "rest.js": "^0.2.1",
-    "socket.io": "^2.2.0",
-    "socket.io-client": "^2.2.0",
-    "ws": "^6.2.0"
+    "socket.io": "^2.3.0",
+    "socket.io-client": "^2.3.0",
+    "ws": "^7.1.2"
   },
   "resolutions": {
     "tar": "^4.4.8"

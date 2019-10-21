@@ -15,7 +15,7 @@ jobs:
       - run: yarn test
 #      - run: yarn audit
       - setup_remote_docker:
-          docker_layer_caching: true
+          docker_layer_caching: false
       - run: |
           if [ "$CIRCLE_BRANCH" == "develop" -o "$CIRCLE_BRANCH" == "testnet" -o "$CIRCLE_BRANCH" == "master" ] ; then
             cp yarn.lock packages/bot/
