@@ -9,11 +9,11 @@
   },
   "author": "leverj",
   "dependencies": {
-    "@leverj/adapter": "1.1.2",
-    "@leverj/logger": "1.1.2",
-    "@leverj/sinful-math": "1.1.2",
-    "@leverj/zka": "1.1.2",
-    "@leverj/affirm": "1.1.2",
+    "@leverj/adapter": "1.2.0",
+    "@leverj/logger": "1.2.0",
+    "@leverj/sinful-math": "1.2.0",
+    "@leverj/zka": "1.2.0",
+    "@leverj/affirm": "1.2.0",
     "config": "^3.2.3",
     "lodash": "^4.17.15",
     "rest.js": "^0.2.1"

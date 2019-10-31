@@ -739,70 +739,70 @@
     npmlog "^4.1.2"
     write-file-atomic "^2.3.0"
 
-"@leverj/adapter@1.1.2":
-  version "1.1.2"
-  resolved "https://registry.yarnpkg.com/@leverj/adapter/-/adapter-1.1.2.tgz#399bf39e918dc047a84b90812b0a647f22d50e6b"
-  integrity sha512-Q4L/It0ZGhbWK012/0AGtlaeBH2YwCvb8EL3M01U5lxm/TYO0DKBUV0dmZzlkaCkhrlrbUbd122gcfjgIXTL8Q==
+"@leverj/adapter@1.2.0":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@leverj/adapter/-/adapter-1.2.0.tgz#998c843786f5743ee4be6b0293512115d878740b"
+  integrity sha512-4XwyCFS4/bgofZOPyGthIEYY69CqLq4vTlWxKfd0elcY7opahbJ9jYEqksUlonOK3H+Ez2GzDf2LVBlkYnH/ew==
   dependencies:
-    "@leverj/gluon-plasma.exchange" "1.0.1"
+    "@leverj/gluon-plasma.exchange" "1.1.0"
     affirm.js "^1.0.0"
 
-"@leverj/affirm@1.1.2":
-  version "1.1.2"
-  resolved "https://registry.yarnpkg.com/@leverj/affirm/-/affirm-1.1.2.tgz#26ee1c0becdb94f0a73b94794ab37d4af8923927"
-  integrity sha512-AMml1qgb/ng61iQ/F9C8XeKrH02WHJRO7zVvxcPbiERfExn+T1WtTmfoOQMTOcgRvV3ise+gSxWO0LRV60S6Iw==
+"@leverj/affirm@1.2.0":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@leverj/affirm/-/affirm-1.2.0.tgz#9faa70601a79bcd1cb2d2bb5ce95053e4a9cf680"
+  integrity sha512-OHCAdh2uoTLkeTn1VnqQQXbRGn9Kc1p7GnNADCLnfMlupe9C3HRAsW2cd4ZuP/vQ5ylOXuXoKK56mkrodI7Zqw==
 
-"@leverj/gluon-plasma.common@1.0.1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@leverj/gluon-plasma.common/-/gluon-plasma.common-1.0.1.tgz#433a9ea10d546da7d76058e1506315e1073acc7e"
-  integrity sha512-Tt/6CYK0KTGrbZyyZA4yptA/vpAw5ktWEQlZgU6CM6YhrIzEhp/nyQBiqAN5MH8qgVCJ4jnPpLDAT/4dkg/3Ag==
+"@leverj/gluon-plasma.common@1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@leverj/gluon-plasma.common/-/gluon-plasma.common-1.1.0.tgz#6cf7cfa6ec9ea9b321c5d0c4f1b176a851f403a7"
+  integrity sha512-5EEGZxu6YLlihWMwdzZMnshXswIne9NqHF7C83aM9iwysaVEE39howdP9LiYvHzORgn1c99pBXXiDtSSWOiYww==
   dependencies:
-    cron "^1.7.1"
+    cron "^1.7.2"
     ethereumjs-util "^6.1.0"
     ethers "^4.0.37"
     fixed-bn.js "^0.0.2"
     immutable "^4.0.0-rc.12"
     lodash "^4.17.15"
-    uuid "^3.3.2"
+    uuid "^3.3.3"
     uuid-parse "^1.1.0"
     web3 "1.0.0-beta.35"
 
-"@leverj/gluon-plasma.exchange@1.0.1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@leverj/gluon-plasma.exchange/-/gluon-plasma.exchange-1.0.1.tgz#e7a13e4b77ea0d29e36242599ade320204e29c89"
-  integrity sha512-TW6frPTQoUQY46tZqmNTFoCVbrPpoC+QSAmd+PCNdLMyZRM5fzdPnKtt2JlszFpZDrWawxpHD64BTFPui2Cf1w==
+"@leverj/gluon-plasma.exchange@1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@leverj/gluon-plasma.exchange/-/gluon-plasma.exchange-1.1.0.tgz#a83316212c19a23d38aeedfdd71959950c1346a7"
+  integrity sha512-NVxVRzRNRkpdvKGsjqDeA+DeFN+HA2FM/77/auNyZf16F6YDaZrYA5QYKmNa5fMBMel1N87FcnnSmx8UrPw4LA==
   dependencies:
-    "@leverj/gluon-plasma.common" "1.0.1"
+    "@leverj/gluon-plasma.common" "1.1.0"
 
-"@leverj/logger@1.1.2":
-  version "1.1.2"
-  resolved "https://registry.yarnpkg.com/@leverj/logger/-/logger-1.1.2.tgz#6e61f98d54358298c8aeb3eca0d55be7a85dcfad"
-  integrity sha512-LeqN8T0kFEB8Vng0PKd4xNz6igR1gRCwGJtZKtDEMw/8tCzhLuhEfxfMHi6QtMVi6tBpwDrDkzG5Sgn+b6blnQ==
+"@leverj/logger@1.2.0":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@leverj/logger/-/logger-1.2.0.tgz#ccae38bd3b26fec96de4484663202b59929c456a"
+  integrity sha512-4JKD33uSNyfjppb2xXutk4hvzhO6yK6L2Dc+7Zlq1oeAX0uLW10DKPGcEHjyj1Bo4ggLiMPE1OS6KQbKxjKS0Q==
 
-"@leverj/sinful-math@1.1.2":
-  version "1.1.2"
-  resolved "https://registry.yarnpkg.com/@leverj/sinful-math/-/sinful-math-1.1.2.tgz#5bbee296ede5c618e750c9b579a8d897b213cf17"
-  integrity sha512-9m5dR20BGcZz8BRQGMwLNJYHOACirsMGIQxzpV9ojCrMKaNek7AGFWAErHWh9B46fd16AqZYDtpspb+Ka+3BMw==
+"@leverj/sinful-math@1.2.0":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@leverj/sinful-math/-/sinful-math-1.2.0.tgz#74d2b6d87fd19506f53cf89e6d2bb101eb610974"
+  integrity sha512-RGixuYLbB/uQ/qtQQCl8e2XcpY/uayX7X73xGw2GluXp4QEPP8JpMt9cnBLaG8xa1JxxJ0c97U+DW5FLBlBu2A==
 
-"@leverj/telegram@1.1.2":
-  version "1.1.2"
-  resolved "https://registry.yarnpkg.com/@leverj/telegram/-/telegram-1.1.2.tgz#1290d238d430f67c2ea8dd89f257605b66a52f7c"
-  integrity sha512-CHCn8sY64ulJhK+bUI5c5sKOa5S7ky0ke2lE+x26WeFRVjSIsrQloEmlM6mStOMt9NazNN4Ize6I0nouUQ0a6A==
+"@leverj/telegram@1.2.0":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@leverj/telegram/-/telegram-1.2.0.tgz#a25da95c7376dcf20280088d413f208744f49b8c"
+  integrity sha512-luJEZ51v1IayqcHglBgGV3q0t5TjTF0r1JRr2LhmT/tnR561CO79FYAS81WXVDTaj6FvS30qsb+OyAglWhbkqw==
   dependencies:
-    "@leverj/logger" "1.1.2"
+    "@leverj/logger" "1.2.0"
     rest.js "^0.2.1"
 
-"@leverj/test-utils@1.1.2":
-  version "1.1.2"
-  resolved "https://registry.yarnpkg.com/@leverj/test-utils/-/test-utils-1.1.2.tgz#abe948b678e5c24eaf4c7a41c14c951dc3a58061"
-  integrity sha512-3GG6waSFg21ti3X3CgGxmZoYqvVUksQWKveFuKpCPyH8LYI89O0BJzGqpaLQcubJ7Jb+WdJX4OJbfLkcKrX5Ig==
+"@leverj/test-utils@1.2.0":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@leverj/test-utils/-/test-utils-1.2.0.tgz#95079227783f57ba5cbc15ce1befc8c6ff6870a7"
+  integrity sha512-lSRgPxI1yCeo38+NsFmRvztiCy6CoaYl1nF4U9ZUQkhKZ6WT+HAxO4Zhfw7FRMkX/ftRHwPq5FnWhvZ2x36EAw==
 
-"@leverj/zka@1.1.2":
-  version "1.1.2"
-  resolved "https://registry.yarnpkg.com/@leverj/zka/-/zka-1.1.2.tgz#f16b4c05f09d19708e77907ba010c163ccb5b9b8"
-  integrity sha512-7/0X0CrCzlsPKOTMzJAlGYTX9SxqtYXeQ48M/DgWOXPj3b7q0d/eoGRWoBdziv7oEPzsqhuSKup9qRwHGiVeZw==
+"@leverj/zka@1.2.0":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@leverj/zka/-/zka-1.2.0.tgz#c8b024fa060a356aea8e330c82fe3cea76ba666a"
+  integrity sha512-FWorxBuGdrBuW9CBj/1S+oLblpMwB5BwbLX4mGkGqv88q7XMu3Xl+EKuYHg7BMxMXgJ5rHUELS/LVqq+b2hNLQ==
   dependencies:
-    "@leverj/affirm" "1.1.2"
+    "@leverj/affirm" "1.2.0"
     ephemeral-cache "^1.1.0"
     ethereumjs-util "^6.1.0"
     lodash "^4.17.11"
@@ -2108,7 +2108,7 @@ create-hmac@^1.1.0, create-hmac@^1.1.2, create-hmac@^1.1.4:
     safe-buffer "^5.0.1"
     sha.js "^2.4.8"
 
-cron@^1.7.1:
+cron@^1.7.2:
   version "1.7.2"
   resolved "https://registry.yarnpkg.com/cron/-/cron-1.7.2.tgz#2ea1f35c138a07edac2ac5af5084ed6fee5723db"
   integrity sha512-+SaJ2OfeRvfQqwXQ2kgr0Y5pzBR/lijf5OpnnaruwWnmI799JfWr2jN2ItOV9s3A/+TFOt6mxvKzQq5F0Jp6VQ==
@@ -7073,6 +7073,11 @@ uuid@^3.0.1, uuid@^3.3.2:
   version "3.3.2"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.3.2.tgz#1b4af4955eb3077c501c23872fc6513811587131"
   integrity sha512-yXJmeNaw3DnnKAOKJE51sL/ZaYfWJRl1pK9dr19YFCu0ObS231AB1/LbqTKRAQ5kw8A90rA6fr4riOUpTZvQZA==
+
+uuid@^3.3.3:
+  version "3.3.3"
+  resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.3.3.tgz#4568f0216e78760ee1dbf3a4d2cf53e224112866"
+  integrity sha512-pW0No1RGHgzlpHJO1nsVrHKpOEIxkGg1xB+v0ZmdNH5OAeAwzAVrCnI2/6Mtx+Uys6iaylxa+D3g4j63IKKjSQ==
 
 validate-npm-package-license@^3.0.1, validate-npm-package-license@^3.0.3:
   version "3.0.4"
