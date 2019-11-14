@@ -1,5 +1,5 @@
 const config = require("./config")
-const zka = require("@leverj/zka")(config.baseUrl, "/api/v1")
+const zka = require("@leverj/zka")(config.baseUrl, "/api/v1", "NONCE")
 const adapter = require("@leverj/adapter/src/OrderAdapter")
 const _ = require('lodash')
 const collarStrategy = require('./collarStrategy')
@@ -46,7 +46,7 @@ module.exports = (async function () {
     let socket = io(baseUrl, {rejectUnauthorized: true});
     socket.on(config.socketTopic, (_) => {
       if (!_.price) return
-      indexPrice = _.price.toFixed(instrument().baseSignificantDigits) - 0
+      indexPrice = _.price.toFixed(instrument().quoteSignificantDigits) - 0
     })
     socket.on("reconnect", onIndexReconnectEvent)
     socket.on("connect_error", onIndexConnectEvent)
@@ -66,8 +66,8 @@ module.exports = (async function () {
     let order = {
       orderType: 'LMT',
       side,
-      price: price.toFixed(instrument().baseSignificantDigits) - 0,
-      quantity: quantity.toFixed(instrument().quoteSignificantDigits) - 0,
+      price: price.toFixed(instrument().quoteSignificantDigits) - 0,
+      quantity: quantity.toFixed(instrument().baseSignificantDigits) - 0,
       timestamp: Date.now() * 1e3,
       accountId: config.accountId,
       token: instrument().address,
