@@ -3,7 +3,7 @@ var fixtures = require('fixtures.js')(__filename)
 
 var mocksock  = require('./mocksock')
 var IndexCore = require('../src/index.core')
-var restjs    = require('rest.js')
+var axios    = require('axios')
 var sinon     = require('sinon')
 var bluebird  = require('bluebird')
 var config    = require('config')
@@ -14,12 +14,12 @@ describe.skip('Coinpit Index', function() {
 
   beforeEach(function() {
     mocksock.mock()
-    sinon.stub(restjs, "get").callsFake(async (url) => fixtures.get[url])
+    sinon.stub(axios, "get").callsFake(async (url) => fixtures.get[url])
   })
 
   afterEach(function() {
     mocksock.stop()
-    if(restjs.get.restore) restjs.get.restore()
+    if(axios.get.restore) axios.get.restore()
     if(clock && clock.restore) clock.restore()
   })
 

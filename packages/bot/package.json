@@ -16,7 +16,7 @@
     "@leverj/affirm": "1.4.3",
     "config": "^3.2.3",
     "lodash": "^4.17.15",
-    "rest.js": "^0.2.1"
+    "axios": "^0.19.1"
   },
   "resolutions": {
     "tar": "^4.4.8"
