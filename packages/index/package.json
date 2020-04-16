@@ -9,9 +9,9 @@
   },
   "author": "leverj",
   "dependencies": {
-    "@leverj/logger": "1.4.3",
-    "@leverj/affirm": "1.4.3",
-    "@leverj/telegram": "1.4.3",
+    "@leverj/logger": "1.4.14",
+    "@leverj/affirm": "1.4.14",
+    "@leverj/telegram": "1.4.14",
     "autobahn": "^19.10.1",
     "bluebird": "^3.7.1",
     "config": "^3.2.3",
