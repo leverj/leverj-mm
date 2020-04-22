@@ -3,7 +3,7 @@ const min      = 60 * sec
 module.exports = {
   logExternalPrice: true,
   expiryTime:       6,
-  port:             8090,
+  port:             11090,
   startupDelay:     10 * sec,
   components:       {
     BTCUSD: {
