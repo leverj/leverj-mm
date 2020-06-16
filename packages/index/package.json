@@ -1,6 +1,6 @@
 {
   "name": "@leverj/index",
-  "version": "0.1.8",
+  "version": "1.0.0",
   "description": "External spot price use by leverj exchange / bot",
   "license": "MIT",
   "scripts": {
