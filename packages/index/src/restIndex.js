@@ -45,7 +45,10 @@ module.exports = function (restProvider) {
   }
 
   index.getPrice()
-  setInterval(index.getPrice, restProvider.frequency || DEFAULT_FREQUENCY)
+  const timer = setInterval(index.getPrice, restProvider.frequency || DEFAULT_FREQUENCY)
 
+  index.stop = function () {
+    if(timer) clearInterval(timer)
+  }
   return index
 }

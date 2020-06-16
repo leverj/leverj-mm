@@ -30,7 +30,7 @@ const prices = {
   "houbi": _ => _.data && _.data[0] && parseFloat(_.data[0].close) || undefined,
 }
 
-const frequency = {
+const frequencies = {
   "bitfinex": 10 * sec,
   "currency.com": 10 * sec,
   "BW.com": 10 * sec,
@@ -42,8 +42,6 @@ const frequency = {
 
 const enabled = {
   "BTCUSD": ["bitfinex", "currency.com", "BW.com", "zbg.com", "hitbtc", "binance", "houbi"],
-  // "BTCUSD": ["bitfinex"],
-  // "ETHUSD": ["bitfinex"]
   "ETHUSD": ["bitfinex", "currency.com", "BW.com", "zbg.com", "hitbtc", "binance", "houbi"]
 }
 
@@ -51,29 +49,34 @@ const providers = (pair) => enabled[pair].map(provider => ({
   name: provider,
   url: urls[pair][provider],
   price: prices[provider],
-  frequency: frequency[provider],
+  frequency: frequencies[provider],
 }))
 
-module.exports = [
-  {
-    pair: "BTCUSD",
-    minExternalProviders: 5,
-    ticksize: 1,
-    topic: "index#BTCUSD",
-    logExternalPrice: true,
-    expiryTime: 6,
-    startupDelay: sec,
-    providers: providers('BTCUSD')
-  },
-  {
-    pair: "ETHUSD",
-    minExternalProviders: 5,
-    ticksize: 4,
-    topic: "index#ETHUSD",
-    logExternalPrice: true,
-    expiryTime: 6,
-    startupDelay: sec,
-    providers: providers('ETHUSD')
-  }
-]
+const generateConfig = () => {
+  return [
+    {
+      pair: "BTCUSD",
+      minExternalProviders: 5,
+      ticksize: 1,
+      topic: "index#BTCUSD",
+      logExternalPrice: true,
+      expiryTime: 6,
+      startupDelay: sec,
+      providers: providers('BTCUSD')
+    },
+    {
+      pair: "ETHUSD",
+      minExternalProviders: 5,
+      ticksize: 4,
+      topic: "index#ETHUSD",
+      logExternalPrice: true,
+      expiryTime: 6,
+      startupDelay: sec,
+      providers: providers('ETHUSD')
+    }
+  ]
+}
+
+let config = generateConfig()
+module.exports = {config, urls, prices, frequencies, generateConfig, enabled}
 

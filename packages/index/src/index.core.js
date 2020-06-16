@@ -1,20 +1,21 @@
-const affirm    = require('affirm.js')
-const median    = require('median')
-const logger    = require("@leverj/logger")
+const affirm = require('affirm.js')
+const median = require('median')
+const logger = require("@leverj/logger")
 const RestIndex = require('./restIndex')
-const Price     = require('./price')
+const Price = require('./price')
 
 module.exports = function (config, emitter) {
-  const index         = {}
-  const TOPIC         = config.topic
-  const prices        = {}
-  let priceIndex      = {}
+  const index = {}
+  const TOPIC = config.topic
+  const prices = {}
+  let priceIndex = {}
+  let restIndex
   let oldPrice
 
   let startTime
 
   function configureRest(providerName, provider) {
-    const restIndex = RestIndex(provider)
+    restIndex = RestIndex(provider)
     restIndex.on('price', function (data) {
       const changed = prices[providerName].setRestPrice(data)
       if (changed) index.priceChanged(providerName)
@@ -23,7 +24,7 @@ module.exports = function (config, emitter) {
 
   index.init = function () {
     for (const provider of config.providers) {
-      const providerName   = provider.name
+      const providerName = provider.name
       prices[providerName] = Price(providerName)
       configureRest(providerName, provider)
     }
@@ -40,11 +41,11 @@ module.exports = function (config, emitter) {
 
   function publishFeed(priceList, providerName) {
     const minExternalProviders = config.minExternalProviders || 1
-    const unExpired            = priceList.filter(x => !x.expired)
-    const price                = unExpired.length < minExternalProviders ? undefined : median(unExpired.map(inverted)).toFixed(config.ticksize) - 0
+    const unExpired = priceList.filter(x => !x.expired)
+    const price = unExpired.length < minExternalProviders ? undefined : median(unExpired.map(inverted)).toFixed(config.ticksize) - 0
     if (!price) return
     if (oldPrice === price) return
-    oldPrice   = price
+    oldPrice = price
     priceIndex = {price: price, lastProvider: providerName, used: unExpired.length, providers: priceList}
     if (config.logExternalPrice) logger.log(TOPIC, prettyPrint(priceIndex))
     if (emitter) emitter.emit(TOPIC, {price: price, used: unExpired.length})
@@ -88,7 +89,7 @@ module.exports = function (config, emitter) {
   }
 
   index.priceChanged = function (providerName, timeoutMessage) {
-    const priceList        = getActivePriceList()
+    const priceList = getActivePriceList()
     const readyToSendPrice = delayedResponder.isReadyToSendPrice(providerName, priceList.length, timeoutMessage)
     if (readyToSendPrice) publishFeed(priceList, providerName)
   }
@@ -96,10 +97,13 @@ module.exports = function (config, emitter) {
   index.getIndex = function () {
     return priceIndex
   }
-  index.reset    = function () {
+  index.reset = function () {
     priceIndex = {}
   }
 
+  index.stop = function () {
+    restIndex.stop()
+  }
   index.init()
 
   return index
