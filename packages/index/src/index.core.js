@@ -1,30 +1,17 @@
 const affirm    = require('affirm.js')
-const mangler   = require('mangler')
 const median    = require('median')
 const logger    = require("@leverj/logger")
 const RestIndex = require('./restIndex')
 const Price     = require('./price')
 
-module.exports = function (config, io) {
+module.exports = function (config, emitter) {
   const index         = {}
   const TOPIC         = config.topic
   const prices        = {}
-  const feedProviders = index.components = {}
-  // var restPrices    = {}
   let priceIndex      = {}
   let oldPrice
 
   let startTime
-
-
-  function configureSocket(providerName, socketModule) {
-    if (!socketModule) return
-    feedProviders[providerName] = require(socketModule)(providerName)
-    feedProviders[providerName].on('price', function (data) {
-      const changed = prices[providerName].setSocketPrice(data)
-      if (changed) index.priceChanged(providerName)
-    })
-  }
 
   function configureRest(providerName, provider) {
     const restIndex = RestIndex(provider)
@@ -38,11 +25,10 @@ module.exports = function (config, io) {
     for (const provider of config.providers) {
       const providerName   = provider.name
       prices[providerName] = Price(providerName)
-      // configureSocket(name, component.socketModule)
       configureRest(providerName, provider)
     }
     logger.log('started', startTime = Date.now(), TOPIC)
-    io.on('connection', function (socket) {
+    emitter.on('connection', function (socket) {
       if (priceIndex.price) socket.emit(TOPIC, {price: priceIndex.price, used: priceIndex.used})
     })
   }
@@ -61,7 +47,7 @@ module.exports = function (config, io) {
     oldPrice   = price
     priceIndex = {price: price, lastProvider: providerName, used: unExpired.length, providers: priceList}
     if (config.logExternalPrice) logger.log(TOPIC, prettyPrint(priceIndex))
-    if (io) io.emit(TOPIC, {price: price, used: unExpired.length})
+    if (emitter) emitter.emit(TOPIC, {price: price, used: unExpired.length})
   }
 
   function inverted(price) {

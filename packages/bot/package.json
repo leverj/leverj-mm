@@ -9,16 +9,14 @@
   },
   "author": "leverj",
   "dependencies": {
-    "@leverj/adapter": "1.4.14",
-    "@leverj/logger": "1.4.14",
-    "@leverj/sinful-math": "1.4.14",
-    "@leverj/zka": "1.4.14",
-    "@leverj/affirm": "1.4.14",
+    "@leverj/adapter": "1.4.16",
+    "@leverj/affirm": "1.4.16",
+    "@leverj/logger": "1.4.16",
+    "@leverj/sinful-math": "1.4.16",
+    "@leverj/zka": "1.4.16",
+    "axios": "^0.19.1",
+    "bluebird": "^3.7.2",
     "config": "^3.2.3",
-    "lodash": "^4.17.15",
-    "axios": "^0.19.1"
-  },
-  "resolutions": {
-    "tar": "^4.4.8"
+    "lodash": "^4.17.15"
   }
 }
