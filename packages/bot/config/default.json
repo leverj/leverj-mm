@@ -1,7 +1,6 @@
 {
   "spot": {
     "strategy": "COLLAR",
-    "baseUrl": "http://localhost:9000",
     "symbol": "LEVETH",
     "max": 30,
     "min": 15,
@@ -17,14 +16,13 @@
   },
   "futures": {
     "strategy": "COLLAR",
-    "baseUrl": "http://localhost:9500",
     "symbol": "1",
     "max": 30,
     "min": 15,
     "priceRange": 100,
     "createInterval": 30,
     "cancelInterval": 40,
-    "quantity": 100,
+    "quantity": 0.100,
     "depth": 4,
     "step": 10,
     "spread": 50,
