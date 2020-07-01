@@ -4,27 +4,30 @@ const config = require('config')
 module.exports = (function () {
   const secretPath = process.argv[2];
   const secret = JSON.parse(fs.readFileSync(secretPath))
-  affirm(config.strategy === "COLLAR" || config.strategy === "RANDOM", "INVALID strategy: " + config.strategy)
-  affirm(config.startSide === "buy" || config.startSide === "sell", "INVALID start side: " + config.startSide)
+  const app = config.app
+  const _config = config[app]
+  affirm(_config.strategy === "COLLAR" || _config.strategy === "RANDOM", "INVALID strategy: " + _config.strategy)
+  affirm(_config.startSide === "buy" || _config.startSide === "sell", "INVALID start side: " + _config.startSide)
   return {
-    baseUrl: config.baseUrl,
+    app: app,
+    baseUrl: _config.baseUrl,
     accountId: secret.accountId,
     apiKey: secret.apiKey,
     secret: secret.secret,
-    symbol: config.symbol,
-    max: config.max - 0,
-    min: config.min - 0,
-    priceRange: config.priceRange - 0,
-    createInterval: config.createInterval * 1000,
-    cancelInterval: config.cancelInterval * 1000,
-    quantity: config.quantity - 0,
-    depth: config.depth - 0,
-    step: config.step - 0,
-    spread: config.spread - 0,
-    startPrice: config.startPrice - 0,
-    startSide: config.startSide,
-    strategy: config.strategy,
-    socketUrl: config.socketUrl,
-    socketTopic: config.socketTopic,
+    symbol: _config.symbol,
+    max: _config.max - 0,
+    min: _config.min - 0,
+    priceRange: _config.priceRange - 0,
+    createInterval: _config.createInterval * 1000,
+    cancelInterval: _config.cancelInterval * 1000,
+    quantity: _config.quantity - 0,
+    depth: _config.depth - 0,
+    step: _config.step - 0,
+    spread: _config.spread - 0,
+    startPrice: _config.startPrice - 0,
+    startSide: _config.startSide,
+    strategy: _config.strategy,
+    socketUrl: _config.socketUrl,
+    socketTopic: _config.socketTopic,
   }
 })()

@@ -5,6 +5,10 @@ const _ = require('lodash')
 const collarStrategy = require('./collarStrategy')
 const io = require('socket.io-client');
 const logger = require("@leverj/logger")
+const BigNumber = require('bignumber.js')
+const adaptor = require('@leverj/adapter/src/OrderAdapter')
+const orderAdaptor = require('@leverj/adapter/src/DerivativesOrderAdaptor')
+let i = 1
 
 module.exports = (async function () {
   const SKEW = 0.2
@@ -14,6 +18,8 @@ module.exports = (async function () {
   let collarWorking, lastPrice, lastSide
   let indexPrice
   let orders = {}
+
+  const isSpot = config.app == 'spot'
   const strategy = {
     COLLAR: doCollarStrategy,
     RANDOM: doRandomStrategy
@@ -39,7 +45,6 @@ module.exports = (async function () {
     strategy[config.strategy]()
   }
 
-
   function connectToIndexes() {
     const baseUrl = config.socketUrl
     if (!baseUrl) return
@@ -63,6 +68,32 @@ module.exports = (async function () {
   }
 
   function newOrder(side, price, quantity) {
+    return isSpot ? spotOrder(side, price, quantity) : futuresOrder(side, price, quantity)
+  }
+
+  function futuresOrder(side, price, quantity) {
+    let order = {
+      accountId: config.accountId,
+      originator: config.apiKey,
+      instrument: config.symbol,
+      price: price.toFixed(instrument().quoteSignificantDigits) - 0,
+      // triggerPrice: order.triggerPrice,
+      quantity: quantity.toFixed(instrument().baseSignificantDigits) - 0,
+      marginPerFraction: BigNumber(price).shiftedBy(instrument().quote.decimals - instrument().baseSignificantDigits).div(99).integerValue().shiftedBy(instrument().baseSignificantDigits).toFixed(),
+      side: side,
+      orderType: 'LMT',
+      timestamp: Date.now() * 1e3,
+      quote: instrument().quote.address,
+      isPostOnly: false,
+      reduceOnly: false,
+      // clientOrderId: BigNumber(nodeUUID.v4().toString().split("-").join(''), 16).toFixed()
+      clientOrderId: i++
+    }
+    order.signature = orderAdaptor.sign(order, instrument(), config.secret)
+    return order
+  }
+
+  function spotOrder(side, price, quantity) {
     let order = {
       orderType: 'LMT',
       side,
@@ -73,8 +104,9 @@ module.exports = (async function () {
       token: instrument().address,
       instrument: instrument().symbol
     }
-    order.signature = adapter.sign(order, instrument(), config.secret)
+    order.signature = adaptor.sign(order, instrument(), config.secret)
     return order
+
   }
 
   async function setLastPriceAndSide() {
