@@ -1123,11 +1123,6 @@
     affirm.js "^1.0.0"
     bignumber.js "^9.0.0"
 
-"@leverj/affirm@1.4.17-alpha.1":
-  version "1.4.17-alpha.1"
-  resolved "https://registry.yarnpkg.com/@leverj/affirm/-/affirm-1.4.17-alpha.1.tgz#e1915aadcea3df179e1edf4ac9c6bbda16a8b162"
-  integrity sha512-8jT+9M1ZsPsHXhFrCng/MQxqzpXpmn48aSFNxV5D8MLuEgCzfV9KnoLgfGVyP0YNZxPKuVV9zOP23YT2hxtf2g==
-
 "@leverj/affirm@1.4.18-alpha.0":
   version "1.4.18-alpha.0"
   resolved "https://registry.yarnpkg.com/@leverj/affirm/-/affirm-1.4.18-alpha.0.tgz#e383469312f42bb3c85079685bbc599bc3913a8a"
@@ -1164,11 +1159,6 @@
   dependencies:
     "@leverj/gluon-plasma.common" "1.1.19-alpha.11"
 
-"@leverj/logger@1.4.17-alpha.1":
-  version "1.4.17-alpha.1"
-  resolved "https://registry.yarnpkg.com/@leverj/logger/-/logger-1.4.17-alpha.1.tgz#2a103e59472e78d77f25bc36a7e12e684ad601b8"
-  integrity sha512-VagXSROidej+4SleVEYmQFts03mPxKr1lfFSKBzWZbSil+ifWGzSoQegLVH4oshS9IEXdlI1S8E5wQXXWpIX7w==
-
 "@leverj/logger@1.4.18-alpha.0":
   version "1.4.18-alpha.0"
   resolved "https://registry.yarnpkg.com/@leverj/logger/-/logger-1.4.18-alpha.0.tgz#18300dd659ebf86c67d46ad3dbb7f98a62e1ae51"
@@ -1179,18 +1169,18 @@
   resolved "https://registry.yarnpkg.com/@leverj/sinful-math/-/sinful-math-1.4.18-alpha.0.tgz#ce1656241c1fff5cf5b9ef31308546ff10964592"
   integrity sha512-GhMPq0I7YSbZAAjcA5yKKkYqUmml1+zKWZi7GpWVG19e0BrdX52PKjNVqTMcl6M96YpoDtbPvYCQcyE2KPdwSA==
 
-"@leverj/telegram@1.4.17-alpha.1":
-  version "1.4.17-alpha.1"
-  resolved "https://registry.yarnpkg.com/@leverj/telegram/-/telegram-1.4.17-alpha.1.tgz#96ec201328ca4ffd116868ada95a672feb2e3ff0"
-  integrity sha512-axqy/aS4QkRjBqD3S+B07q6jZ+he42peVD+EztnDFERbFqd4TLAtBuQhMnPzhvLMRhfF9XhWkbswsxqH81uE1Q==
+"@leverj/telegram@1.4.18-alpha.0":
+  version "1.4.18-alpha.0"
+  resolved "https://registry.yarnpkg.com/@leverj/telegram/-/telegram-1.4.18-alpha.0.tgz#243035a5aea110c93deca5ac9bb1a8ca266ca46a"
+  integrity sha512-6t4cW9/ypMkgpzZ7mcHNMafVkDAH7j59uO9h7Ua3WSzr2pk4Oka3lXa81LvvmipJVIacWi2jbSL2xpNfoNslwA==
   dependencies:
-    "@leverj/logger" "1.4.17-alpha.1"
+    "@leverj/logger" "1.4.18-alpha.0"
     axios "^0.19.0"
 
-"@leverj/test-utils@1.4.17-alpha.1":
-  version "1.4.17-alpha.1"
-  resolved "https://registry.yarnpkg.com/@leverj/test-utils/-/test-utils-1.4.17-alpha.1.tgz#fe8916f494a2df3cca9fa99e12d878109d3cfd19"
-  integrity sha512-p8O1GNsYimPkyEtD/gEqr/mRJWvyBKRvVITwT6yGcbIom9WiMr/ebMGRLcW2kLPx2xSJPY4Cpuud5MnJH9Iqvw==
+"@leverj/test-utils@1.4.18-alpha.0":
+  version "1.4.18-alpha.0"
+  resolved "https://registry.yarnpkg.com/@leverj/test-utils/-/test-utils-1.4.18-alpha.0.tgz#8a6898523714412512b3925f19eef6e94f3b040d"
+  integrity sha512-3/egWgdiiI39HngEPXvwpXfkKWlZNqbBdW0sodgWvzdIbbPI0SWLlqcb1xS58CVNvBBQ6/EEtL/pumUX+Pw+pQ==
 
 "@leverj/zka@1.4.18-alpha.0":
   version "1.4.18-alpha.0"

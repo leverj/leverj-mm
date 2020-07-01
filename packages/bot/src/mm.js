@@ -3,7 +3,7 @@ const zka = require("@leverj/zka")(config.baseUrl, "/api/v1", "NONCE")
 const adapter = require("@leverj/adapter/src/OrderAdapter")
 const _ = require('lodash')
 const collarStrategy = require('./collarStrategy')
-const io = require('socket.io-client');
+const io = require('socket.io-client')
 const logger = require("@leverj/logger")
 const BigNumber = require('bignumber.js')
 const adaptor = require('@leverj/adapter/src/OrderAdapter')
@@ -19,7 +19,7 @@ module.exports = (async function () {
   let indexPrice
   let orders = {}
 
-  const isSpot = config.app == 'spot'
+  const isSpot = config.app === 'spot'
   const strategy = {
     COLLAR: doCollarStrategy,
     RANDOM: doRandomStrategy
@@ -48,7 +48,7 @@ module.exports = (async function () {
   function connectToIndexes() {
     const baseUrl = config.socketUrl
     if (!baseUrl) return
-    let socket = io(baseUrl, {rejectUnauthorized: true});
+    let socket = io(baseUrl, {rejectUnauthorized: true})
     socket.on(config.socketTopic, (_) => {
       if (!_.price) return
       indexPrice = _.price.toFixed(instrument().quoteSignificantDigits) - 0
@@ -72,6 +72,8 @@ module.exports = (async function () {
   }
 
   function futuresOrder(side, price, quantity) {
+    if (price % instrument().tickSize !== 0) price = price - (price % instrument().tickSize) + instrument().tickSize
+    console.log("#".repeat(50), price, price)
     let order = {
       accountId: config.accountId,
       originator: config.apiKey,
@@ -165,7 +167,7 @@ module.exports = (async function () {
     try {
       logger.log("removeAndAddOrders", {indexPrice, lastPrice, lastSide})
       let {toBeAdded, toBeRemoved} = getOrdersToBeAddedAndDeleted()
-      const newOrders = toBeAdded.filter(each=>each.price > 0).map(each => newOrder(each.side, each.price, config.quantity))
+      const newOrders = toBeAdded.filter(each => each.price > 0).map(each => newOrder(each.side, each.price, config.quantity))
       let patch = []
       if (toBeRemoved.length) patch.push({op: 'remove', value: toBeRemoved.map(order => order.uuid)})
       if (newOrders.length) patch.push({op: 'add', value: newOrders})
@@ -185,7 +187,7 @@ module.exports = (async function () {
       if (indexPrice) return collarStrategy.getOrdersToBeAddedAndDeleted(Object.values(orders), indexPrice)
       else return {toBeAdded: [], toBeRemoved: []}
     } else {
-      return collarStrategy.getOrdersToBeAddedAndDeleted(Object.values(orders), lastPrice, lastSide);
+      return collarStrategy.getOrdersToBeAddedAndDeleted(Object.values(orders), lastPrice, lastSide)
     }
   }
 
@@ -208,7 +210,7 @@ module.exports = (async function () {
       instruments: updateInstruments,
       order_execution: onExecution,
       trade: onTrade,
-    };
+    }
     Object.keys(eventMap).forEach(function (event) {
       zka.socket.removeAllListeners(event)
       zka.socket.on(event, eventMap[event])
@@ -216,9 +218,9 @@ module.exports = (async function () {
   }
 
   function onOrderAdd(response) {
-    const resultOrders = response.result;
+    const resultOrders = response.result
     for (let i = 0; i < resultOrders.length; i++) {
-      const order = resultOrders[i];
+      const order = resultOrders[i]
       if (order.instrument !== config.symbol) continue
       orders[order.uuid] = order
     }
@@ -231,12 +233,12 @@ module.exports = (async function () {
   const PATCH_OPS = {
     remove: onOrderDel,
     add: onOrderAdd,
-  };
+  }
 
   function onOrderPatch(response) {
-    const result = response.result;
+    const result = response.result
     for (let i = 0; i < result.length; i++) {
-      const eachResponse = result[i];
+      const eachResponse = result[i]
       if (eachResponse.error) return logger.log(eachResponse.error)
       PATCH_OPS[eachResponse.op]({result: eachResponse.response})
     }
