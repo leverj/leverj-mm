@@ -8,9 +8,9 @@
   },
   "author": "leverj",
   "dependencies": {
-    "@leverj/affirm": "1.4.17-alpha.1",
-    "@leverj/logger": "1.4.17-alpha.1",
-    "@leverj/telegram": "1.4.17-alpha.1",
+    "@leverj/affirm": "1.4.18-alpha.0",
+    "@leverj/logger": "1.4.18-alpha.0",
+    "@leverj/telegram": "1.4.18-alpha.0",
     "axios": "^0.19.1",
     "bluebird": "^3.7.2",
     "lodash": "^4.17.15",

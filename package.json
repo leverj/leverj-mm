@@ -35,7 +35,7 @@
     "publish:up": "lerna version $up --exact --git-tag-version --push --yes && lerna publish from-git --yes"
   },
   "devDependencies": {
-    "@leverj/test-utils": "1.4.17-alpha.1",
+    "@leverj/test-utils": "1.4.18-alpha.0",
     "del": "^5.1.0",
     "expect.js": "^0.3.1",
     "fixtures.js": "^2.1.0",
