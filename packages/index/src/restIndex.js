@@ -1,4 +1,4 @@
-const rest = require('rest.js');
+const rest = require('axios');
 const affirm = require('affirm.js');
 const url = require('url');
 const logger = require("@leverj/logger");
@@ -24,8 +24,8 @@ module.exports = function (restProvider) {
     let response;
     try {
       response = await rest.get(index.url(), {'User-Agent': 'restjs'})
-      affirm(response && response.body, 'Invalid response: ' + response.statusCode)
-      let data = response.body;
+      affirm(response && response.data, 'Invalid response: ' + response.status)
+      let data = response.data;
       if (typeof data === 'string') data = JSON.parse(data)
       const price = index.price(data)
       affirm(!isNaN(price) && price !== Infinity && price !== null && price > 0, 'Invalid price[' + price + "]")
@@ -33,7 +33,7 @@ module.exports = function (restProvider) {
       emitter.emit('price', restPrice)
       return price
     } catch (e) {
-      logger.log(response && response.statusCode, restProvider.name, e.stack)
+      logger.log(response && response.status, restProvider.name, e.stack)
       if (!restPrice || !restPrice.time) return undefined
       if (Date.now() - restPrice.time > config.expiryTime * MINUTE) {
         restPrice.expired = true
@@ -45,7 +45,10 @@ module.exports = function (restProvider) {
   }
 
   index.getPrice()
-  setInterval(index.getPrice, restProvider.frequency || DEFAULT_FREQUENCY)
+  const timer = setInterval(index.getPrice, restProvider.frequency || DEFAULT_FREQUENCY)
 
+  index.stop = function () {
+    if(timer) clearInterval(timer)
+  }
   return index
 }

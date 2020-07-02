@@ -25,12 +25,12 @@ jobs:
             docker push leverj/leverj-mm
             docker logout
           fi
-      - run: |
-          if [ "$CIRCLE_BRANCH" == "develop" ] ; then
-            cp yarn.lock packages/index/
-            docker info
-            docker build -t leverj/index packages/index
-            docker login -u $DOCKER_USER -p $DOCKER_PASS
-            docker push leverj/index
-            docker logout
-          fi
+#      - run: |
+#          if [ "$CIRCLE_BRANCH" == "develop" ] ; then
+#            cp yarn.lock packages/index/
+#            docker info
+#            docker build -t leverj/index packages/index
+#            docker login -u $DOCKER_USER -p $DOCKER_PASS
+#            docker push leverj/index
+#            docker logout
+#          fi
