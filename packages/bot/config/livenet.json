@@ -1,9 +1,9 @@
 {
   "spot": {
-    "baseUrl": "https://live.leverj.io/spot"
+    "baseUrl": "https://live.leverj.io"
   },
   "futures": {
-    "baseUrl": "https://live.leverj.io/futures"
+    "baseUrl": "https://live.leverj.io"
   }
 
 }
