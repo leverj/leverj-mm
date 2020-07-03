@@ -1,10 +1,8 @@
 {
   "spot": {
-    "baseUrl": "https://dev.leverj.io/spot",
-    "quantity": 1
+    "baseUrl": "https://dev.leverj.io"
   },
   "futures": {
-    "baseUrl": "https://dev.leverj.io/futures",
-    "quantity": 1
+    "baseUrl": "https://dev.leverj.io"
   }
 }

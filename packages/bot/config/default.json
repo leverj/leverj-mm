@@ -12,7 +12,9 @@
     "step": 0.000001,
     "spread": 0.00001,
     "startPrice": 0.00006,
-    "startSide": "buy"
+    "startSide": "buy",
+    "apiPath": "/spot/api/v1",
+    "socketPath": "/spot/socket.io"
   },
   "futures": {
     "strategy": "COLLAR",
@@ -27,6 +29,8 @@
     "step": 10,
     "spread": 50,
     "startPrice": 9125,
-    "startSide": "buy"
+    "startSide": "buy",
+    "apiPath": "/futures/api/v1",
+    "socketPath": "/futures/socket.io"
   }
 }

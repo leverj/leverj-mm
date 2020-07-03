@@ -1,8 +1,8 @@
 {
   "spot": {
-    "baseUrl": "https://ropsten.leverj.io/spot"
+    "baseUrl": "https://ropsten.leverj.io"
   },
   "futures": {
-    "baseUrl": "https://ropsten.leverj.io/futures"
+    "baseUrl": "https://ropsten.leverj.io"
   }
 }

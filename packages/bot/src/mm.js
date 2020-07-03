@@ -1,5 +1,5 @@
 const config = require("./config")
-const zka = require("@leverj/zka")(config.baseUrl, "/api/v1", "NONCE")
+const zka = require("@leverj/zka")(config.baseUrl, config.apiPath, "NONCE", {path: config.socketPath})
 const adapter = require("@leverj/adapter/src/OrderAdapter")
 const _ = require('lodash')
 const collarStrategy = require('./collarStrategy')

@@ -1,8 +1,8 @@
 {
   "spot": {
-    "baseUrl": "https://kovan.leverj.io/spot"
+    "baseUrl": "https://kovan.leverj.io"
   },
   "futures": {
-    "baseUrl": "https://kovan.leverj.io/futures"
+    "baseUrl": "https://kovan.leverj.io"
   }
 }

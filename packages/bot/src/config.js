@@ -2,7 +2,7 @@ const fs = require('fs')
 const affirm = require('affirm.js')
 const config = require('config')
 module.exports = (function () {
-  const secretPath = process.argv[2];
+  const secretPath = process.argv[2]
   const secret = JSON.parse(fs.readFileSync(secretPath))
   const app = config.app
   const _config = config[app]
@@ -29,5 +29,7 @@ module.exports = (function () {
     strategy: _config.strategy,
     socketUrl: _config.socketUrl,
     socketTopic: _config.socketTopic,
+    apiPath: _config.apiPath,
+    socketPath: _config.socketPath,
   }
 })()
