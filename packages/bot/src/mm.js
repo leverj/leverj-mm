@@ -73,7 +73,6 @@ module.exports = (async function () {
 
   function futuresOrder(side, price, quantity) {
     if (price % instrument().tickSize !== 0) price = price - (price % instrument().tickSize) + instrument().tickSize
-    console.log("#".repeat(50), price, price)
     let order = {
       accountId: config.accountId,
       originator: config.apiKey,
