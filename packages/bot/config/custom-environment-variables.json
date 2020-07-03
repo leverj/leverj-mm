@@ -1,5 +1,5 @@
 {
-  "app": "APP",
+  "app": "BOT_APP",
   "spot": {
     "strategy": "STRATEGY",
     "baseUrl": "BASE_URL",
