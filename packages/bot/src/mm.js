@@ -308,7 +308,7 @@ module.exports = (async function () {
 
   function randomQty(qty) {
     let sign = Math.random() < 0.5 ? -1 : +1
-    return Math.round(qty * (1 + sign * Math.random() * 2 * SKEW))
+    return qty * (1 + sign * Math.random() * 2 * SKEW)
   }
 
   function applyRange(number, range) {

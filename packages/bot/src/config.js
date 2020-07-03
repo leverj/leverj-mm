@@ -5,6 +5,7 @@ module.exports = (function () {
   const secretPath = process.argv[2]
   const secret = JSON.parse(fs.readFileSync(secretPath))
   const app = config.app
+  affirm(app === 'spot' || app === 'futures', `BOT_APP must be spot or futures. found ${app}`)
   const _config = config[app]
   affirm(_config.strategy === "COLLAR" || _config.strategy === "RANDOM", "INVALID strategy: " + _config.strategy)
   affirm(_config.startSide === "buy" || _config.startSide === "sell", "INVALID start side: " + _config.startSide)
