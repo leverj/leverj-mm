@@ -14,9 +14,7 @@ module.exports = (async function () {
   const SKEW = 0.2
   let instruments = {}
   let leverjConfig = {}
-  let readOnly = false
-  let collarWorking, lastPrice, lastSide
-  let indexPrice
+  let collarWorking, lastPrice, lastSide, indexPrice
   let orders = {}
 
   const isSpot = config.app === 'spot'
@@ -39,36 +37,21 @@ module.exports = (async function () {
       if (order.instrument === config.symbol)
         orders[order.uuid] = order
     })
-    connectToIndexes()
     listen()
     await setLastPriceAndSide()
     strategy[config.strategy]()
   }
 
-  function connectToIndexes() {
-    const baseUrl = config.socketUrl
-    if (!baseUrl) return
-    let socket = io(baseUrl, {rejectUnauthorized: true})
-    socket.on(config.socketTopic, (_) => {
-      if (!_.price) return
-      indexPrice = _.price.toFixed(instrument().quoteSignificantDigits) - 0
-    })
-    socket.on("reconnect", onIndexReconnectEvent)
-    socket.on("connect_error", onIndexConnectEvent)
-    socket.on("connect_timeout", onIndexConnectEvent)
-    socket.on("disconnect", onIndexConnectEvent)
-    socket.on("reconnect_error", onIndexConnectEvent)
-    socket.on("reconnect_failed", onIndexConnectEvent)
-  }
-
-  const onIndexReconnectEvent = (data) => logger.log('index', 'reconnected')
-  const onIndexConnectEvent = (data) => {
-    indexPrice = undefined
-    logger.log('index', 'onConnectEvent', data instanceof Error ? data.message : data)
-  }
-
   function newOrder(side, price, quantity) {
     return isSpot ? spotOrder(side, price, quantity) : futuresOrder(side, price, quantity)
+  }
+
+  function getMarginPerFraction(side, price) {
+    const maxLeverage = instrument().maxLeverage
+    const entryPrice = side === 'buy' ? price : indexPrice ? Math.max(indexPrice, price) : price
+    let baseSignificantDigits = instrument().baseSignificantDigits
+    let decimals = instrument().quote.decimals
+    return BigNumber(entryPrice).shiftedBy(decimals - baseSignificantDigits).div(maxLeverage).integerValue().shiftedBy(baseSignificantDigits).toFixed()
   }
 
   function futuresOrder(side, price, quantity) {
@@ -80,7 +63,7 @@ module.exports = (async function () {
       price: price.toFixed(instrument().quoteSignificantDigits) - 0,
       // triggerPrice: order.triggerPrice,
       quantity: quantity.toFixed(instrument().baseSignificantDigits) - 0,
-      marginPerFraction: BigNumber(price).shiftedBy(instrument().quote.decimals - instrument().baseSignificantDigits).div(99).integerValue().shiftedBy(instrument().baseSignificantDigits).toFixed(),
+      marginPerFraction: getMarginPerFraction(side, price),
       side: side,
       orderType: 'LMT',
       timestamp: Date.now() * 1e3,
@@ -143,6 +126,11 @@ module.exports = (async function () {
     delayedRemoveAndAddOrders()
   }
 
+  function onIndex({topic, price}) {
+    if (!instrument().topic || topic !== instrument().topic) return
+    indexPrice = price
+  }
+
   function onExecution(accountExecution) {
     // setPriceAndSide(accountExecution.price, accountExecution.side)
     // delayedRemoveAndAddOrders()
@@ -182,7 +170,7 @@ module.exports = (async function () {
   }
 
   function getOrdersToBeAddedAndDeleted() {
-    if (config.socketUrl) {
+    if (instrument().topic) {
       if (indexPrice) return collarStrategy.getOrdersToBeAddedAndDeleted(Object.values(orders), indexPrice)
       else return {toBeAdded: [], toBeRemoved: []}
     } else {
@@ -209,6 +197,7 @@ module.exports = (async function () {
       instruments: updateInstruments,
       order_execution: onExecution,
       trade: onTrade,
+      index: onIndex,
     }
     Object.keys(eventMap).forEach(function (event) {
       zka.socket.removeAllListeners(event)

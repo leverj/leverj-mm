@@ -28,8 +28,6 @@ module.exports = (function () {
     startPrice: _config.startPrice - 0,
     startSide: _config.startSide,
     strategy: _config.strategy,
-    socketUrl: _config.socketUrl,
-    socketTopic: _config.socketTopic,
     apiPath: _config.apiPath,
     socketPath: _config.socketPath,
   }
