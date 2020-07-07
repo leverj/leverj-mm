@@ -3,7 +3,7 @@
   "spot": {
     "strategy": "STRATEGY",
     "baseUrl": "BASE_URL",
-    "symbol": "SYMBOL",
+    "instrumentId": "INST_ID",
     "max": "MAX",
     "min": "MIN",
     "priceRange": "PRICE_RANGE",
@@ -21,7 +21,7 @@
   "futures": {
     "strategy": "STRATEGY",
     "baseUrl": "BASE_URL",
-    "symbol": "SYMBOL",
+    "instrumentId": "INST_ID",
     "max": "MAX",
     "min": "MIN",
     "priceRange": "PRICE_RANGE",

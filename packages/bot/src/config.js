@@ -16,7 +16,7 @@ module.exports = (function () {
     accountId: secret.accountId,
     apiKey: secret.apiKey,
     secret: secret.secret,
-    symbol: _config.symbol,
+    instrumentId: _config.instrumentId,
     max: _config.max - 0,
     min: _config.min - 0,
     priceRange: _config.priceRange - 0,

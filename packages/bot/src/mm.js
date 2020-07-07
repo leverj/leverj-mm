@@ -19,7 +19,7 @@ module.exports = (async function () {
   let orders = {}
   let ema
 
-  const emaMultiplier = 2 / ( 10 + 1)
+  const emaMultiplier = 2 / (10 + 1)
   const isSpot = config.app === 'spot'
   const strategy = {
     COLLAR: doCollarStrategy,
@@ -52,11 +52,11 @@ module.exports = (async function () {
   }
 
   function getMarginPerFraction(side, price) {
-    const maxLeverage = instrument().maxLeverage
-    const entryPrice = side === 'buy' ? price : indexPrice ? Math.max(indexPrice, price) : price
+    const maxLeverage = instrument().maxLeverage - 1
+    const estimatedEntryPrice = side === 'buy' ? price : indexPrice ? Math.max(indexPrice, price) : price
     let baseSignificantDigits = instrument().baseSignificantDigits
     let decimals = instrument().quote.decimals
-    return BigNumber(entryPrice).shiftedBy(decimals - baseSignificantDigits).div(maxLeverage).integerValue().shiftedBy(baseSignificantDigits).toFixed()
+    return BigNumber(estimatedEntryPrice).shiftedBy(decimals - baseSignificantDigits).div(maxLeverage).integerValue().shiftedBy(baseSignificantDigits).toFixed()
   }
 
   function futuresOrder(side, price, quantity) {
@@ -64,7 +64,7 @@ module.exports = (async function () {
     let order = {
       accountId: config.accountId,
       originator: config.apiKey,
-      instrument: config.symbol,
+      instrument: config.instrumentId,
       price: price.toFixed(instrument().quoteSignificantDigits) - 0,
       // triggerPrice: order.triggerPrice,
       quantity: quantity.toFixed(instrument().baseSignificantDigits) - 0,
@@ -91,7 +91,7 @@ module.exports = (async function () {
       timestamp: Date.now() * 1e3,
       accountId: config.accountId,
       token: instrument().address,
-      instrument: instrument().symbol
+      instrument: instrument().id
     }
     order.signature = adaptor.sign(order, instrument(), config.secret)
     return order
@@ -99,7 +99,7 @@ module.exports = (async function () {
   }
 
   async function setLastPriceAndSide() {
-    const trades = await zka.rest.get(`/contract/${config.symbol}/trade`)
+    const trades = await zka.rest.get(`/instrument/${config.id}/trade`)
     if (trades.length)
       setPriceAndSide(trades[0].price, trades[0].side)
     else
@@ -120,7 +120,7 @@ module.exports = (async function () {
   // EMA strategy
   async function doEMAStrategy() {
     const price = isSpot ? lastPrice : indexPrice
-    ema = ema ? (price * ema * emaMultiplier + ema * ( 1 - emaMultiplier)) : price
+    ema = ema ? (price * ema * emaMultiplier + ema * (1 - emaMultiplier)) : price
     console.log('ema', ema)
   }
 
@@ -133,7 +133,7 @@ module.exports = (async function () {
   }
 
   function onTrade({instrument, price, side}) {
-    if (instrument !== config.symbol) return
+    if (instrument !== config.instrumentId) return
     setPriceAndSide(price, side)
     delayedRemoveAndAddOrders()
   }
@@ -182,10 +182,10 @@ module.exports = (async function () {
   }
 
   function sendOrders(patch) {
-      if (patch && patch.length) {
-        logger.log("sending patch", patch)
-        zka.socket.send({method: "PATCH", uri: "/order", body: patch})
-      }
+    if (patch && patch.length) {
+      logger.log("sending patch", patch)
+      zka.socket.send({method: "PATCH", uri: "/order", body: patch})
+    }
   }
 
   function getOrdersToBeAddedAndDeleted() {
@@ -228,12 +228,12 @@ module.exports = (async function () {
   function onDiffOrderBook(difforderbook) {
     const qty = config.quantity
     console.log('ema', ema, 'bid', difforderbook.bid, 'ask', difforderbook.ask, 'qty', qty)
-    if(!ema || config.strategy != 'EMA') return console.log('Returning ema:', ema, 'strategy', config.strategy)
+    if (!ema || config.strategy != 'EMA') return console.log('Returning ema:', ema, 'strategy', config.strategy)
     deltaFrac = (lastPrice - ema) / ema
     // const qty = deltaFrac * config.quantity
     let patch = []
-    if(difforderbook.bid > ema) patch.push({op: 'add', value: [newOrder('sell', difforderbook.bid, qty)]})
-    if(difforderbook.ask < ema) patch.push({op: 'add', value: [newOrder('buy', difforderbook.ask, qty)]})
+    if (difforderbook.bid > ema) patch.push({op: 'add', value: [newOrder('sell', difforderbook.bid, qty)]})
+    if (difforderbook.ask < ema) patch.push({op: 'add', value: [newOrder('buy', difforderbook.ask, qty)]})
     sendOrders(patch)
   }
 
@@ -241,7 +241,7 @@ module.exports = (async function () {
     const resultOrders = response.result
     for (let i = 0; i < resultOrders.length; i++) {
       const order = resultOrders[i]
-      if (order.instrument !== config.symbol) continue
+      if (order.instrument !== config.instrumentId) continue
       orders[order.uuid] = order
     }
   }
@@ -283,7 +283,7 @@ module.exports = (async function () {
 
   function myMessageReceived(data) {
     if (!data.accountDetails || !data.accountDetails.orders) return
-    orders = data.accountDetails.orders[config.symbol]
+    orders = data.accountDetails.orders[config.instrumentId]
   }
 
   function onNtp(data) {
@@ -310,8 +310,8 @@ module.exports = (async function () {
   async function createRandomOrders() {
     if (leverjConfig.maintenance || leverjConfig.tradingDisabled) return
     try {
-      let bid = randomPrice(lastPrice)
-      let ask = randomPrice(lastPrice)
+      let bid = randomPrice(indexPrice || lastPrice)
+      let ask = randomPrice(indexPrice || lastPrice)
       let buy = newOrder('buy', applyRange(bid, config.priceRange), randomQty(config.quantity))
       let sell = newOrder('sell', applyRange(ask, config.priceRange), randomQty(config.quantity))
       zka.rest.post('/order', {}, [buy, sell]).catch(logger.log)
@@ -349,7 +349,7 @@ module.exports = (async function () {
 
 
   function instrument() {
-    return instruments[config.symbol]
+    return instruments[config.instrumentId]
   }
 
   start().catch(logger.log)
