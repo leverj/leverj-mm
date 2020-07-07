@@ -1,4 +1,5 @@
 {
+  "strats": { "COLLAR": true, "RANDOM": true, "EMA": true},
   "spot": {
     "strategy": "COLLAR",
     "symbol": "LEVETH",

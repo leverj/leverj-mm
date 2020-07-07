@@ -8,6 +8,7 @@ const logger = require("@leverj/logger")
 const BigNumber = require('bignumber.js')
 const adaptor = require('@leverj/adapter/src/OrderAdapter')
 const orderAdaptor = require('@leverj/adapter/src/DerivativesOrderAdaptor')
+const OrderAdapter = require("@leverj/adapter/src/OrderAdapter")
 let i = 1
 
 module.exports = (async function () {
@@ -16,11 +17,14 @@ module.exports = (async function () {
   let leverjConfig = {}
   let collarWorking, lastPrice, lastSide, indexPrice
   let orders = {}
+  let ema
 
+  const emaMultiplier = 2 / ( 10 + 1)
   const isSpot = config.app === 'spot'
   const strategy = {
     COLLAR: doCollarStrategy,
-    RANDOM: doRandomStrategy
+    RANDOM: doRandomStrategy,
+    EMA: doEMAStrategy,
   }
 
   const toMakerSide = side => side === "buy" ? "sell" : "buy"
@@ -43,6 +47,7 @@ module.exports = (async function () {
   }
 
   function newOrder(side, price, quantity) {
+    console.log('Order:', side, quantity, price)
     return isSpot ? spotOrder(side, price, quantity) : futuresOrder(side, price, quantity)
   }
 
@@ -112,6 +117,13 @@ module.exports = (async function () {
     logger.log('last price and side', price, side)
   }
 
+  // EMA strategy
+  async function doEMAStrategy() {
+    const price = isSpot ? lastPrice : indexPrice
+    ema = ema ? (price * ema * emaMultiplier + ema * ( 1 - emaMultiplier)) : price
+    console.log('ema', ema)
+  }
+
 // collar strategy ##########################################################################################
 
 
@@ -169,6 +181,13 @@ module.exports = (async function () {
     collarWorking = false
   }
 
+  function sendOrders(patch) {
+      if (patch && patch.length) {
+        logger.log("sending patch", patch)
+        zka.socket.send({method: "PATCH", uri: "/order", body: patch})
+      }
+  }
+
   function getOrdersToBeAddedAndDeleted() {
     if (instrument().topic) {
       if (indexPrice) return collarStrategy.getOrdersToBeAddedAndDeleted(Object.values(orders), indexPrice)
@@ -198,11 +217,24 @@ module.exports = (async function () {
       order_execution: onExecution,
       trade: onTrade,
       index: onIndex,
+      difforderbook: onDiffOrderBook,
     }
     Object.keys(eventMap).forEach(function (event) {
       zka.socket.removeAllListeners(event)
       zka.socket.on(event, eventMap[event])
     })
+  }
+
+  function onDiffOrderBook(difforderbook) {
+    const qty = config.quantity
+    console.log('ema', ema, 'bid', difforderbook.bid, 'ask', difforderbook.ask, 'qty', qty)
+    if(!ema || config.strategy != 'EMA') return console.log('Returning ema:', ema, 'strategy', config.strategy)
+    deltaFrac = (lastPrice - ema) / ema
+    // const qty = deltaFrac * config.quantity
+    let patch = []
+    if(difforderbook.bid > ema) patch.push({op: 'add', value: [newOrder('sell', difforderbook.bid, qty)]})
+    if(difforderbook.ask < ema) patch.push({op: 'add', value: [newOrder('buy', difforderbook.ask, qty)]})
+    sendOrders(patch)
   }
 
   function onOrderAdd(response) {
