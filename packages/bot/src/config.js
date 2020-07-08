@@ -7,7 +7,8 @@ module.exports = (function () {
   const app = config.app
   affirm(app === 'spot' || app === 'futures', `BOT_APP must be spot or futures. found ${app}`)
   const _config = config[app]
-  affirm(_config.strategy === "COLLAR" || _config.strategy === "RANDOM", "INVALID strategy: " + _config.strategy)
+  console.log('strats', config['strats'])
+  affirm(config['strats'][_config.strategy], "INVALID strategy: " + _config.strategy)
   affirm(_config.startSide === "buy" || _config.startSide === "sell", "INVALID start side: " + _config.startSide)
   return {
     app: app,
@@ -15,7 +16,7 @@ module.exports = (function () {
     accountId: secret.accountId,
     apiKey: secret.apiKey,
     secret: secret.secret,
-    symbol: _config.symbol,
+    instrumentId: _config.instrumentId,
     max: _config.max - 0,
     min: _config.min - 0,
     priceRange: _config.priceRange - 0,

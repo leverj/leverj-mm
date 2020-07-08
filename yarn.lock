@@ -1113,13 +1113,13 @@
     npmlog "^4.1.2"
     write-file-atomic "^2.3.0"
 
-"@leverj/adapter@1.4.18-alpha.0":
-  version "1.4.18-alpha.0"
-  resolved "https://registry.yarnpkg.com/@leverj/adapter/-/adapter-1.4.18-alpha.0.tgz#b63193eb0debc38ffbce7fcf2cacb5c5e8b9f452"
-  integrity sha512-7vfmUxuLEOTH0q3ZffYkYCMFMckAUIjiXSRpyOKyjuAyGQyCQkUkyKSrucopVXjR+Q19sIYQLtKjSEsJZc7fwg==
+"@leverj/adapter@1.5.1-alpha.4":
+  version "1.5.1-alpha.4"
+  resolved "https://registry.yarnpkg.com/@leverj/adapter/-/adapter-1.5.1-alpha.4.tgz#65dd87d943102b82120cbb614ca8a0b87da12e1e"
+  integrity sha512-q4axu1mt4qTpTdZj1RKkG/TcG7R+cr3JEF12xL7lJBdPlRyasDQnKhr9rhqLt54X4pW0ursojzix1Y08GdlhQg==
   dependencies:
-    "@leverj/gluon-plasma.exchange" "1.1.19-alpha.11"
-    "@leverj/gluon-plasma.exchange.derivatives" "1.1.19-alpha.11"
+    "@leverj/gluon-plasma.exchange" "1.1.19-alpha.14"
+    "@leverj/gluon-plasma.exchange.derivatives" "1.1.19-alpha.14"
     affirm.js "^1.0.0"
     bignumber.js "^9.0.0"
 
@@ -1128,10 +1128,15 @@
   resolved "https://registry.yarnpkg.com/@leverj/affirm/-/affirm-1.4.18-alpha.0.tgz#e383469312f42bb3c85079685bbc599bc3913a8a"
   integrity sha512-JjXgKBkrx5ur5CUzzn/vSZdoEzNRU6mId5Ka8ksfWX8yh6nBRa8DZGuxlCC/eSfjO67FKrf28fMXWpNJBP5rAA==
 
-"@leverj/gluon-plasma.common@1.1.19-alpha.11":
-  version "1.1.19-alpha.11"
-  resolved "https://registry.yarnpkg.com/@leverj/gluon-plasma.common/-/gluon-plasma.common-1.1.19-alpha.11.tgz#1303af72f360b468e90d3dd2e52511a254e72044"
-  integrity sha512-9tqaMzpZKb7JHQ+dT8jh2PWvGjqVsK9njY/23VVu3Aiae+67YnQCUDY7+eCQblfPEFQpn9vS+qCccjerIun2Pw==
+"@leverj/affirm@1.5.1-alpha.4":
+  version "1.5.1-alpha.4"
+  resolved "https://registry.yarnpkg.com/@leverj/affirm/-/affirm-1.5.1-alpha.4.tgz#f4ce08aa02b0610fb28d3a509ae469e752538124"
+  integrity sha512-pXi088cDdoBiTCuEuegKCZFxBClHeMyk5k3qlFVJKzVOzUf29sYGcR+HZtMkmKFSBFVzbHn7hq/ZqTV3y6Du0g==
+
+"@leverj/gluon-plasma.common@1.1.19-alpha.14":
+  version "1.1.19-alpha.14"
+  resolved "https://registry.yarnpkg.com/@leverj/gluon-plasma.common/-/gluon-plasma.common-1.1.19-alpha.14.tgz#484bfdeda95b0e8bb910145e95cdd021b1400f94"
+  integrity sha512-dtAQr3mliJkbGf0jhbEqPkJKVYO1SyhXyKqQncRQ1lwwm/W09gK3/dC24gXIhtDLRdaLbNqOppXKpgmBuNYeMg==
   dependencies:
     cron "^1.8.2"
     ethereumjs-util "^6.2.0"
@@ -1144,30 +1149,35 @@
     uuid-parse "^1.1.0"
     web3-utils "1.2.9"
 
-"@leverj/gluon-plasma.exchange.derivatives@1.1.19-alpha.11":
-  version "1.1.19-alpha.11"
-  resolved "https://registry.yarnpkg.com/@leverj/gluon-plasma.exchange.derivatives/-/gluon-plasma.exchange.derivatives-1.1.19-alpha.11.tgz#af25fec9fa1030953f36e36cb536813d08d5f3a3"
-  integrity sha512-K1flQ/aXi9jnkLT8ZjPMCg5S91wMY9yNkX3ljAVvgDnXEY7Wkt4cRVfjNPgRIIrZ5CuLnVuEsvwG0yhbxAkgJQ==
+"@leverj/gluon-plasma.exchange.derivatives@1.1.19-alpha.14":
+  version "1.1.19-alpha.14"
+  resolved "https://registry.yarnpkg.com/@leverj/gluon-plasma.exchange.derivatives/-/gluon-plasma.exchange.derivatives-1.1.19-alpha.14.tgz#68d69c5fe2494a5f7ec1452ea968d5ea5d3e1b85"
+  integrity sha512-+rWkEd8r33BQHAnSkHxjLcy3zNENR/n+LjESdPcJdhMfekSpxeQXRakoPqCuefAVOGyiGbCvVd3Jzcqtg/6n9w==
   dependencies:
-    "@leverj/gluon-plasma.common" "1.1.19-alpha.11"
+    "@leverj/gluon-plasma.common" "1.1.19-alpha.14"
     bignumber.js "^9.0.0"
 
-"@leverj/gluon-plasma.exchange@1.1.19-alpha.11":
-  version "1.1.19-alpha.11"
-  resolved "https://registry.yarnpkg.com/@leverj/gluon-plasma.exchange/-/gluon-plasma.exchange-1.1.19-alpha.11.tgz#b82836caf8b1f62d76a54ff9fe77972b408ba94d"
-  integrity sha512-0biPt0j65ezNsubBRVBtIdSmvBRQ9cLootddx4j04qfq7PRAdTun4LwChDkYWay/a5BoNywrB4E/ehR7DQ8+EQ==
+"@leverj/gluon-plasma.exchange@1.1.19-alpha.14":
+  version "1.1.19-alpha.14"
+  resolved "https://registry.yarnpkg.com/@leverj/gluon-plasma.exchange/-/gluon-plasma.exchange-1.1.19-alpha.14.tgz#153c0b37d556d1df357bd7bafe091a5cfb4c3784"
+  integrity sha512-q8bbERSu7KXwlY18eAZMxLoT1Y6CW5sXnOe4CBHmNm0ql6xQ99xd42B6qKRLUZnxjAqQ4e81Dy2AukC6p0eVmw==
   dependencies:
-    "@leverj/gluon-plasma.common" "1.1.19-alpha.11"
+    "@leverj/gluon-plasma.common" "1.1.19-alpha.14"
 
 "@leverj/logger@1.4.18-alpha.0":
   version "1.4.18-alpha.0"
   resolved "https://registry.yarnpkg.com/@leverj/logger/-/logger-1.4.18-alpha.0.tgz#18300dd659ebf86c67d46ad3dbb7f98a62e1ae51"
   integrity sha512-AgzaqKxwKwJH4M54fJmnWuEoloJL2zYSIosOJg4H5mDjx7x3+WBxvIA2XZN0yYFiiyNt13NbOPkoi/Eb9VlVAQ==
 
-"@leverj/sinful-math@1.4.18-alpha.0":
-  version "1.4.18-alpha.0"
-  resolved "https://registry.yarnpkg.com/@leverj/sinful-math/-/sinful-math-1.4.18-alpha.0.tgz#ce1656241c1fff5cf5b9ef31308546ff10964592"
-  integrity sha512-GhMPq0I7YSbZAAjcA5yKKkYqUmml1+zKWZi7GpWVG19e0BrdX52PKjNVqTMcl6M96YpoDtbPvYCQcyE2KPdwSA==
+"@leverj/logger@1.5.1-alpha.4":
+  version "1.5.1-alpha.4"
+  resolved "https://registry.yarnpkg.com/@leverj/logger/-/logger-1.5.1-alpha.4.tgz#a86decce8419c927070394374604e26f240fa539"
+  integrity sha512-decd9ATPPNMmD0EyNWLIKQ2bdOwPm1eZyyMsG2wByR2wfmb11vGiAn/j/Gw0oYpQIux7tfJTNe4pJsY8KJFcBw==
+
+"@leverj/sinful-math@1.5.1-alpha.4":
+  version "1.5.1-alpha.4"
+  resolved "https://registry.yarnpkg.com/@leverj/sinful-math/-/sinful-math-1.5.1-alpha.4.tgz#9386528710fa630c5ba02ec37043a2334e6e5f8e"
+  integrity sha512-CSPakRGl7evrewWnKNCf4PyFHVW81o6u7U8EHEa/UC3kRzXf5IgDOLUT3YrQbIqX2VtvLGApcUpGPdS2GXo9Dw==
 
 "@leverj/telegram@1.4.18-alpha.0":
   version "1.4.18-alpha.0"
@@ -1182,13 +1192,13 @@
   resolved "https://registry.yarnpkg.com/@leverj/test-utils/-/test-utils-1.4.18-alpha.0.tgz#8a6898523714412512b3925f19eef6e94f3b040d"
   integrity sha512-3/egWgdiiI39HngEPXvwpXfkKWlZNqbBdW0sodgWvzdIbbPI0SWLlqcb1xS58CVNvBBQ6/EEtL/pumUX+Pw+pQ==
 
-"@leverj/zka@1.4.18-alpha.0":
-  version "1.4.18-alpha.0"
-  resolved "https://registry.yarnpkg.com/@leverj/zka/-/zka-1.4.18-alpha.0.tgz#0fa52bc64d109370c41ecf637538d4cb77285b0b"
-  integrity sha512-/8/PXztedh78OPu+MdhpgP6T7RFwMxArb3GkpCvF19aVPPWbMzGCx0gQv5rJUv3vC4obhM4uNmv+AAgd1UxyHg==
+"@leverj/zka@1.5.1-alpha.4":
+  version "1.5.1-alpha.4"
+  resolved "https://registry.yarnpkg.com/@leverj/zka/-/zka-1.5.1-alpha.4.tgz#60a8c291610497535ddf1c229d57cf351e18de56"
+  integrity sha512-6pq2D1R962v7eYPESfrjUaNlwbrd3m+lJ45lRFuxXIW6vafPEST3/CX+WcjziTyQOUB2cwVYL31GzSzdA7hqyA==
   dependencies:
-    "@leverj/affirm" "1.4.18-alpha.0"
-    "@leverj/logger" "1.4.18-alpha.0"
+    "@leverj/affirm" "1.5.1-alpha.4"
+    "@leverj/logger" "1.5.1-alpha.4"
     axios "^0.19.0"
     ephemeral-cache "^1.1.0"
     ethereumjs-util "^6.2.0"
