@@ -99,7 +99,7 @@ module.exports = (async function () {
   }
 
   async function setLastPriceAndSide() {
-    const trades = await zka.rest.get(`/instrument/${config.id}/trade`)
+    const trades = await zka.rest.get(`/instrument/${config.instrumentId}/trade`)
     if (trades.length)
       setPriceAndSide(trades[0].price, trades[0].side)
     else
@@ -119,9 +119,10 @@ module.exports = (async function () {
 
   // EMA strategy
   async function doEMAStrategy() {
-    const price = isSpot ? lastPrice : indexPrice
-    ema = ema ? (price * ema * emaMultiplier + ema * (1 - emaMultiplier)) : price
-    console.log('ema', ema)
+    setInterval(function() {
+      const price = isSpot ? lastPrice : indexPrice
+      ema = ema && price ? (price * emaMultiplier + ema * (1 - emaMultiplier)) : price
+    }, 10000)
   }
 
 // collar strategy ##########################################################################################
@@ -226,12 +227,15 @@ module.exports = (async function () {
   }
 
   function onDiffOrderBook(difforderbook) {
-    const qty = config.quantity
-    console.log('ema', ema, 'bid', difforderbook.bid, 'ask', difforderbook.ask, 'qty', qty)
+    console.log('ema', ema, 'bid', difforderbook.bid, 'ask', difforderbook.ask, 'qty', config.quantity)
     if (!ema || config.strategy != 'EMA') return console.log('Returning ema:', ema, 'strategy', config.strategy)
-    deltaFrac = (lastPrice - ema) / ema
-    // const qty = deltaFrac * config.quantity
+    setTimeout(() => sendEMAOrders(difforderbook), 100)
+  }
+
+  function sendEMAOrders(difforderbook) {
+    const qty = config.quantity
     let patch = []
+    if(Object.keys(orders).length > 0) patch.push({op: 'remove', value: Object.keys(orders)})
     if (difforderbook.bid > ema) patch.push({op: 'add', value: [newOrder('sell', difforderbook.bid, qty)]})
     if (difforderbook.ask < ema) patch.push({op: 'add', value: [newOrder('buy', difforderbook.ask, qty)]})
     sendOrders(patch)
