@@ -1,22 +1,30 @@
 const config = require("./config")
-const zka = require("@leverj/zka")(config.baseUrl, "/api/v1", "NONCE")
+const zka = require("@leverj/zka")(config.baseUrl, config.apiPath, "NONCE", {path: config.socketPath})
 const adapter = require("@leverj/adapter/src/OrderAdapter")
 const _ = require('lodash')
 const collarStrategy = require('./collarStrategy')
-const io = require('socket.io-client');
+const io = require('socket.io-client')
 const logger = require("@leverj/logger")
+const BigNumber = require('bignumber.js')
+const adaptor = require('@leverj/adapter/src/OrderAdapter')
+const orderAdaptor = require('@leverj/adapter/src/DerivativesOrderAdaptor')
+const OrderAdapter = require("@leverj/adapter/src/OrderAdapter")
+let i = 1
 
 module.exports = (async function () {
   const SKEW = 0.2
   let instruments = {}
   let leverjConfig = {}
-  let readOnly = false
-  let collarWorking, lastPrice, lastSide
-  let indexPrice
+  let collarWorking, lastPrice, lastSide, indexPrice
   let orders = {}
+  let ema
+
+  const emaMultiplier = 2 / (10 + 1)
+  const isSpot = config.app === 'spot'
   const strategy = {
     COLLAR: doCollarStrategy,
-    RANDOM: doRandomStrategy
+    RANDOM: doRandomStrategy,
+    EMA: doEMAStrategy,
   }
 
   const toMakerSide = side => side === "buy" ? "sell" : "buy"
@@ -33,36 +41,48 @@ module.exports = (async function () {
       if (order.instrument === config.symbol)
         orders[order.uuid] = order
     })
-    connectToIndexes()
     listen()
     await setLastPriceAndSide()
     strategy[config.strategy]()
   }
 
-
-  function connectToIndexes() {
-    const baseUrl = config.socketUrl
-    if (!baseUrl) return
-    let socket = io(baseUrl, {rejectUnauthorized: true});
-    socket.on(config.socketTopic, (_) => {
-      if (!_.price) return
-      indexPrice = _.price.toFixed(instrument().quoteSignificantDigits) - 0
-    })
-    socket.on("reconnect", onIndexReconnectEvent)
-    socket.on("connect_error", onIndexConnectEvent)
-    socket.on("connect_timeout", onIndexConnectEvent)
-    socket.on("disconnect", onIndexConnectEvent)
-    socket.on("reconnect_error", onIndexConnectEvent)
-    socket.on("reconnect_failed", onIndexConnectEvent)
-  }
-
-  const onIndexReconnectEvent = (data) => logger.log('index', 'reconnected')
-  const onIndexConnectEvent = (data) => {
-    indexPrice = undefined
-    logger.log('index', 'onConnectEvent', data instanceof Error ? data.message : data)
-  }
-
   function newOrder(side, price, quantity) {
+    console.log('Order:', side, quantity, price)
+    return isSpot ? spotOrder(side, price, quantity) : futuresOrder(side, price, quantity)
+  }
+
+  function getMarginPerFraction(side, price) {
+    const maxLeverage = instrument().maxLeverage - 1
+    const estimatedEntryPrice = side === 'buy' ? price : indexPrice ? Math.max(indexPrice, price) : price
+    let baseSignificantDigits = instrument().baseSignificantDigits
+    let decimals = instrument().quote.decimals
+    return BigNumber(estimatedEntryPrice).shiftedBy(decimals - baseSignificantDigits).div(maxLeverage).integerValue().shiftedBy(baseSignificantDigits).toFixed()
+  }
+
+  function futuresOrder(side, price, quantity) {
+    if (price % instrument().tickSize !== 0) price = price - (price % instrument().tickSize) + instrument().tickSize
+    let order = {
+      accountId: config.accountId,
+      originator: config.apiKey,
+      instrument: config.instrumentId,
+      price: price.toFixed(instrument().quoteSignificantDigits) - 0,
+      // triggerPrice: order.triggerPrice,
+      quantity: quantity.toFixed(instrument().baseSignificantDigits) - 0,
+      marginPerFraction: getMarginPerFraction(side, price),
+      side: side,
+      orderType: 'LMT',
+      timestamp: Date.now() * 1e3,
+      quote: instrument().quote.address,
+      isPostOnly: false,
+      reduceOnly: false,
+      // clientOrderId: BigNumber(nodeUUID.v4().toString().split("-").join(''), 16).toFixed()
+      clientOrderId: i++
+    }
+    order.signature = orderAdaptor.sign(order, instrument(), config.secret)
+    return order
+  }
+
+  function spotOrder(side, price, quantity) {
     let order = {
       orderType: 'LMT',
       side,
@@ -71,14 +91,15 @@ module.exports = (async function () {
       timestamp: Date.now() * 1e3,
       accountId: config.accountId,
       token: instrument().address,
-      instrument: instrument().symbol
+      instrument: instrument().id
     }
-    order.signature = adapter.sign(order, instrument(), config.secret)
+    order.signature = adaptor.sign(order, instrument(), config.secret)
     return order
+
   }
 
   async function setLastPriceAndSide() {
-    const trades = await zka.rest.get(`/contract/${config.symbol}/trade`)
+    const trades = await zka.rest.get(`/instrument/${config.instrumentId}/trade`)
     if (trades.length)
       setPriceAndSide(trades[0].price, trades[0].side)
     else
@@ -96,6 +117,14 @@ module.exports = (async function () {
     logger.log('last price and side', price, side)
   }
 
+  // EMA strategy
+  async function doEMAStrategy() {
+    setInterval(function() {
+      const price = isSpot ? lastPrice : indexPrice
+      ema = ema && price ? (price * emaMultiplier + ema * (1 - emaMultiplier)) : price
+    }, 10000)
+  }
+
 // collar strategy ##########################################################################################
 
 
@@ -105,9 +134,14 @@ module.exports = (async function () {
   }
 
   function onTrade({instrument, price, side}) {
-    if (instrument !== config.symbol) return
+    if (instrument !== config.instrumentId) return
     setPriceAndSide(price, side)
     delayedRemoveAndAddOrders()
+  }
+
+  function onIndex({topic, price}) {
+    if (!instrument().topic || topic !== instrument().topic) return
+    indexPrice = price
   }
 
   function onExecution(accountExecution) {
@@ -133,7 +167,7 @@ module.exports = (async function () {
     try {
       logger.log("removeAndAddOrders", {indexPrice, lastPrice, lastSide})
       let {toBeAdded, toBeRemoved} = getOrdersToBeAddedAndDeleted()
-      const newOrders = toBeAdded.filter(each=>each.price > 0).map(each => newOrder(each.side, each.price, config.quantity))
+      const newOrders = toBeAdded.filter(each => each.price > 0).map(each => newOrder(each.side, each.price, config.quantity))
       let patch = []
       if (toBeRemoved.length) patch.push({op: 'remove', value: toBeRemoved.map(order => order.uuid)})
       if (newOrders.length) patch.push({op: 'add', value: newOrders})
@@ -148,12 +182,19 @@ module.exports = (async function () {
     collarWorking = false
   }
 
+  function sendOrders(patch) {
+    if (patch && patch.length) {
+      logger.log("sending patch", patch)
+      zka.socket.send({method: "PATCH", uri: "/order", body: patch})
+    }
+  }
+
   function getOrdersToBeAddedAndDeleted() {
-    if (config.socketUrl) {
+    if (instrument().topic) {
       if (indexPrice) return collarStrategy.getOrdersToBeAddedAndDeleted(Object.values(orders), indexPrice)
       else return {toBeAdded: [], toBeRemoved: []}
     } else {
-      return collarStrategy.getOrdersToBeAddedAndDeleted(Object.values(orders), lastPrice, lastSide);
+      return collarStrategy.getOrdersToBeAddedAndDeleted(Object.values(orders), lastPrice, lastSide)
     }
   }
 
@@ -176,18 +217,35 @@ module.exports = (async function () {
       instruments: updateInstruments,
       order_execution: onExecution,
       trade: onTrade,
-    };
+      index: onIndex,
+      difforderbook: onDiffOrderBook,
+    }
     Object.keys(eventMap).forEach(function (event) {
       zka.socket.removeAllListeners(event)
       zka.socket.on(event, eventMap[event])
     })
   }
 
+  function onDiffOrderBook(difforderbook) {
+    console.log('ema', ema, 'bid', difforderbook.bid, 'ask', difforderbook.ask, 'qty', config.quantity)
+    if (!ema || config.strategy != 'EMA') return console.log('Returning ema:', ema, 'strategy', config.strategy)
+    setTimeout(() => sendEMAOrders(difforderbook), 100)
+  }
+
+  function sendEMAOrders(difforderbook) {
+    const qty = config.quantity
+    let patch = []
+    if(Object.keys(orders).length > 0) patch.push({op: 'remove', value: Object.keys(orders)})
+    if (difforderbook.bid > ema) patch.push({op: 'add', value: [newOrder('sell', difforderbook.bid, qty)]})
+    if (difforderbook.ask < ema) patch.push({op: 'add', value: [newOrder('buy', difforderbook.ask, qty)]})
+    sendOrders(patch)
+  }
+
   function onOrderAdd(response) {
-    const resultOrders = response.result;
+    const resultOrders = response.result
     for (let i = 0; i < resultOrders.length; i++) {
-      const order = resultOrders[i];
-      if (order.instrument !== config.symbol) continue
+      const order = resultOrders[i]
+      if (order.instrument !== config.instrumentId) continue
       orders[order.uuid] = order
     }
   }
@@ -199,12 +257,12 @@ module.exports = (async function () {
   const PATCH_OPS = {
     remove: onOrderDel,
     add: onOrderAdd,
-  };
+  }
 
   function onOrderPatch(response) {
-    const result = response.result;
+    const result = response.result
     for (let i = 0; i < result.length; i++) {
-      const eachResponse = result[i];
+      const eachResponse = result[i]
       if (eachResponse.error) return logger.log(eachResponse.error)
       PATCH_OPS[eachResponse.op]({result: eachResponse.response})
     }
@@ -229,7 +287,7 @@ module.exports = (async function () {
 
   function myMessageReceived(data) {
     if (!data.accountDetails || !data.accountDetails.orders) return
-    orders = data.accountDetails.orders[config.symbol]
+    orders = data.accountDetails.orders[config.instrumentId]
   }
 
   function onNtp(data) {
@@ -256,8 +314,8 @@ module.exports = (async function () {
   async function createRandomOrders() {
     if (leverjConfig.maintenance || leverjConfig.tradingDisabled) return
     try {
-      let bid = randomPrice(lastPrice)
-      let ask = randomPrice(lastPrice)
+      let bid = randomPrice(indexPrice || lastPrice)
+      let ask = randomPrice(indexPrice || lastPrice)
       let buy = newOrder('buy', applyRange(bid, config.priceRange), randomQty(config.quantity))
       let sell = newOrder('sell', applyRange(ask, config.priceRange), randomQty(config.quantity))
       zka.rest.post('/order', {}, [buy, sell]).catch(logger.log)
@@ -275,7 +333,7 @@ module.exports = (async function () {
 
   function randomQty(qty) {
     let sign = Math.random() < 0.5 ? -1 : +1
-    return Math.round(qty * (1 + sign * Math.random() * 2 * SKEW))
+    return qty * (1 + sign * Math.random() * 2 * SKEW)
   }
 
   function applyRange(number, range) {
@@ -295,7 +353,7 @@ module.exports = (async function () {
 
 
   function instrument() {
-    return instruments[config.symbol]
+    return instruments[config.instrumentId]
   }
 
   start().catch(logger.log)

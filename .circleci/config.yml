@@ -13,24 +13,23 @@ jobs:
       - run: sudo npm upgrade -g lerna
       - run: yarn install
       - run: yarn test
-#      - run: yarn audit
       - setup_remote_docker:
           docker_layer_caching: false
       - run: |
           if [ "$CIRCLE_BRANCH" == "develop" -o "$CIRCLE_BRANCH" == "testnet" -o "$CIRCLE_BRANCH" == "master" ] ; then
-            cp yarn.lock packages/bot/
-            docker info
-            docker build -t leverj/leverj-mm:$CIRCLE_BRANCH packages/bot
+            cd packages/bot/
+            yarn docker:pre
+            docker build -t leverj/leverj-mm:$CIRCLE_BRANCH .
             docker login -u $DOCKER_USER -p $DOCKER_PASS
             docker push leverj/leverj-mm
             docker logout
           fi
-      - run: |
-          if [ "$CIRCLE_BRANCH" == "develop" ] ; then
-            cp yarn.lock packages/index/
-            docker info
-            docker build -t leverj/index packages/index
-            docker login -u $DOCKER_USER -p $DOCKER_PASS
-            docker push leverj/index
-            docker logout
-          fi
+#      - run: |
+#          if [ "$CIRCLE_BRANCH" == "develop" ] ; then
+#            cp yarn.lock packages/index/
+#            docker info
+#            docker build -t leverj/index packages/index
+#            docker login -u $DOCKER_USER -p $DOCKER_PASS
+#            docker push leverj/index
+#            docker logout
+#          fi

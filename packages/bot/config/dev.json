@@ -1,7 +1,20 @@
 {
-  "baseUrl": "http://localhost:9000",
-  "createInterval": 3,
-  "cancelInterval": 6,
-  "quantity": 1,
-  "depth": 4
+  "spot": {
+    "baseUrl": "http://localhost:9000",
+    "apiPath": "/api/v1",
+    "socketPath": "/socket.io",
+    "createInterval": 3,
+    "cancelInterval": 6,
+    "quantity": 100,
+    "depth": 2
+  },
+  "futures": {
+    "baseUrl": "http://localhost:9500",
+    "apiPath": "/api/v1",
+    "socketPath": "/socket.io",
+    "createInterval": 3,
+    "cancelInterval": 6,
+    "quantity": 1,
+    "startPrice": 9125
+  }
 }

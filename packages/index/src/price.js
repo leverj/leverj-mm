@@ -11,12 +11,6 @@ module.exports = (function(name) {
     return socketPrice ? socketPrice : restPrice
   }
 
-  price.setSocketPrice = function(data) {
-    var oldData = socketPrice
-    socketPrice = data
-    return price.isChanged(oldData, data)
-  }
-
   price.setRestPrice = function(data) {
     var oldData = restPrice
     restPrice   = data
