@@ -12,7 +12,7 @@ DOCKER_IMG=leverj/leverj-mm:develop
 OLD=$(docker ps -aqf name=$BOT_NAME)
 [ -n "$OLD" ] && docker stop $OLD && docker rm $OLD
 
-ENVS="-e NODE_ENV=develop -e BOT_APP=spot -e STRATEGY=EMA -e QUANTITY=0.1 -e INST_ID=LEVETH"
+ENVS="-e NODE_ENV=livenet -e BOT_APP=spot -e STRATEGY=EMA -e QUANTITY=0.1 -e INST_ID=ETHDAI"
 docker run --cap-drop ALL --read-only --restart=unless-stopped --name "$BOT_NAME" \
         -d -v $KEY_FOLDER:/privateKey \
         $ENVS \
