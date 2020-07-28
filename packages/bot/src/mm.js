@@ -47,7 +47,7 @@ module.exports = (async function () {
   }
 
   function newOrder(side, price, quantity) {
-    console.log('Order:', side, quantity, price)
+    console.log('Order:', side, price, quantity)
     return isSpot ? spotOrder(side, price, quantity) : futuresOrder(side, price, quantity)
   }
 
@@ -227,6 +227,7 @@ module.exports = (async function () {
   }
 
   function onDiffOrderBook(difforderbook) {
+    if(difforderbook.instrument !== instrument().id) return
     console.log('ema', ema, 'bid', difforderbook.bid, 'ask', difforderbook.ask, 'qty', config.quantity)
     if (!ema || config.strategy != 'EMA') return console.log('Returning ema:', ema, 'strategy', config.strategy)
     setTimeout(() => sendEMAOrders(difforderbook), 100)
