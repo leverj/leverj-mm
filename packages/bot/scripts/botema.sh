@@ -13,6 +13,7 @@ KEY_FOLDER=$(dirname $KEY_FILE)
 KEY=$(basename $KEY_FILE)
 
 DOCKER_IMG=leverj/leverj-mm:develop
+docker pull $DOCKER_IMG
 
 OLD=$(docker ps -aqf name=$BOT_NAME)
 [ -n "$OLD" ] && docker stop $OLD && docker rm $OLD
