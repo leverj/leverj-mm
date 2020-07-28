@@ -18,6 +18,7 @@ module.exports = (async function () {
   let collarWorking, lastPrice, lastSide, indexPrice
   let orders = {}
   let ema
+  let timestamp = Date.now()
 
   const emaMultiplier = 2 / (10 + 1)
   const isSpot = config.app === 'spot'
@@ -140,7 +141,7 @@ module.exports = (async function () {
   }
 
   function onIndex({topic, price}) {
-    if (!instrument().topic || topic !== instrument().topic) return
+    if (!instrument().topic || topic !== instrument().topic) return console.log('Ignoring ', topic, price, instrument().topic)
     indexPrice = price
   }
 
@@ -228,8 +229,10 @@ module.exports = (async function () {
 
   function onDiffOrderBook(difforderbook) {
     if(difforderbook.instrument !== instrument().id) return
-    console.log('ema', ema, 'bid', difforderbook.bid, 'ask', difforderbook.ask, 'qty', config.quantity)
-    if (!ema || config.strategy != 'EMA') return console.log('Returning ema:', ema, 'strategy', config.strategy)
+    if(Date.now() < timestamp + 5000) return
+    timestamp = Date.now()
+    console.log('ema', ema, ', bid', difforderbook.bid, ', ask', difforderbook.ask, ', qty', config.quantity)
+    if (!ema || config.strategy != 'EMA') return console.log('Returning ema:', ema, ', strategy:', config.strategy)
     setTimeout(() => sendEMAOrders(difforderbook), 100)
   }
 
