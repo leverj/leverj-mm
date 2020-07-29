@@ -237,7 +237,7 @@ module.exports = (async function () {
   }
 
   function sendEMAOrders(difforderbook) {
-    const qty = config.quantity
+    const qty = config.quantity + (Math.random()/10).toFixed(2)
     let patch = []
     if(Object.keys(orders).length > 0) patch.push({op: 'remove', value: Object.keys(orders)})
     if (difforderbook.bid > ema) patch.push({op: 'add', value: [newOrder('sell', difforderbook.bid, qty)]})
