@@ -229,7 +229,7 @@ module.exports = (async function () {
 
   function onDiffOrderBook(difforderbook) {
     if(difforderbook.instrument !== instrument().id) return
-    if(Date.now() < timestamp + 5000) return
+    if(Date.now() < timestamp + 30000) return
     timestamp = Date.now()
     console.log('ema', ema, ', bid', difforderbook.bid, ', ask', difforderbook.ask, ', qty', config.quantity)
     if (!ema || config.strategy != 'EMA') return console.log('Returning ema:', ema, ', strategy:', config.strategy)
@@ -237,7 +237,7 @@ module.exports = (async function () {
   }
 
   function sendEMAOrders(difforderbook) {
-    const qty = config.quantity
+    const qty = config.quantity + ((Math.random()*config.quantity/10).toFixed(2) - 0)
     let patch = []
     if(Object.keys(orders).length > 0) patch.push({op: 'remove', value: Object.keys(orders)})
     if (difforderbook.bid > ema) patch.push({op: 'add', value: [newOrder('sell', difforderbook.bid, qty)]})
