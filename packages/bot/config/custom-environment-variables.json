@@ -34,6 +34,7 @@
     "startPrice": "START_PRICE",
     "startSide": "START_SIDE",
     "socketUrl": "SOCKET_URL",
-    "socketTopic": "SOCKET_TOPIC"
+    "socketTopic": "SOCKET_TOPIC",
+    "premium": "PREMIUM"
   }
 }

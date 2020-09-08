@@ -39,7 +39,7 @@ module.exports = (async function () {
     instruments = allConfig.instruments
     const allOrders = await zka.rest.get("/order")
     allOrders.forEach(order => {
-      if (order.instrument === config.symbol)
+      if (order.instrument === config.instrumentId)
         orders[order.uuid] = order
     })
     listen()
