@@ -65,8 +65,12 @@ module.exports = function () {
     } else {
       buyPrice = sinful.sub(price, sinful.sub(sinful.div(config.spread, 2)))
     }
-    const sellPrice = sinful.add(buyPrice, config.spread)
-    return [buyPrice, sellPrice]
+    const sellPrice        = sinful.add(buyPrice, config.spread)
+    const premium          = 1 + (config.premium || 0)/100
+    const premiumBuyPrice  = sinful.mul(buyPrice, premium)
+    const premiumSellPrice = sinful.mul(sellPrice, premium)
+
+    return [premiumBuyPrice, premiumSellPrice]
   }
 
   function getCancels(currentBook, newBook) {
