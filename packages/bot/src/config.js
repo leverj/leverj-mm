@@ -31,6 +31,6 @@ module.exports = (function () {
     strategy: _config.strategy,
     apiPath: _config.apiPath,
     socketPath: _config.socketPath,
-    premium: _config.premium - 0
+    premium: (_config.premium || 0) - 0
   }
 })()

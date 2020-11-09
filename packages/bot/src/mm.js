@@ -318,8 +318,8 @@ module.exports = (async function () {
   async function createRandomOrders() {
     if (leverjConfig.maintenance || leverjConfig.tradingDisabled) return
     try {
-      let bid = randomPrice(indexPrice || lastPrice)
-      let ask = randomPrice(indexPrice || lastPrice)
+      let bid = randomPrice(indexPrice || lastPrice, 1)
+      let ask = randomPrice(indexPrice || lastPrice , -1)
       let buy = newOrder('buy', applyRange(bid, config.priceRange), randomQty(config.quantity))
       let sell = newOrder('sell', applyRange(ask, config.priceRange), randomQty(config.quantity))
       zka.rest.post('/order', {}, [buy, sell]).catch(logger.log)
@@ -328,8 +328,8 @@ module.exports = (async function () {
     }
   }
 
-  function randomPrice(price) {
-    let sign = Math.random() < 0.5 ? -1 : +1
+  function randomPrice(price, sign) {
+    sign = sign || Math.random() < 0.5 ? -1 : +1
     let delta = price * (1 + sign * Math.random() * SKEW)
     delta = Math.round(delta * 1000000) / 1000000
     return delta
@@ -348,7 +348,7 @@ module.exports = (async function () {
 
   async function cancelRandomOrders() {
     let orderList = await zka.rest.get('/order')
-    logger.log(orderList.length)
+    logger.log('total orders', orderList.length)
     if (orderList.length > config.max) {
       let toBeRemoved = orderList.slice(config.min, config.min + 100)
       await zka.rest.patch("/order", {}, [{op: 'remove', value: toBeRemoved.map(order => order.uuid)}])
