@@ -329,10 +329,11 @@ module.exports = (async function () {
   }
 
   function randomPrice(price, sign) {
-    sign = sign || Math.random() < 0.5 ? -1 : +1
-    let delta = price * (1 + sign * Math.random() * SKEW)
-    delta = Math.round(delta * 1000000) / 1000000
-    return delta
+    return price
+    // sign = sign || Math.random() < 0.5 ? -1 : +1
+    // let delta = price * (1 + sign * Math.random() * SKEW)
+    // delta = Math.round(delta * 1000000) / 1000000
+    // return delta
   }
 
   function randomQty(qty) {
