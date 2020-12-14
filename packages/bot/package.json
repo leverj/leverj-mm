@@ -10,15 +10,15 @@
   },
   "author": "leverj",
   "dependencies": {
-    "@leverj/adapter": "1.5.1-alpha.37",
-    "@leverj/affirm": "1.5.1-alpha.37",
-    "@leverj/logger": "1.5.1-alpha.37",
-    "@leverj/sinful-math": "1.5.1-alpha.37",
-    "@leverj/zka": "1.5.1-alpha.37",
-    "axios": "^0.20.0",
-    "bignumber.js": "^9.0.0",
+    "@leverj/adapter": "1.5.14",
+    "@leverj/affirm": "1.5.14",
+    "@leverj/logger": "1.5.14",
+    "@leverj/sinful-math": "1.5.14",
+    "@leverj/zka": "1.5.14",
+    "axios": "^0.21.0",
+    "bignumber.js": "^9.0.1",
     "bluebird": "^3.7.2",
-    "config": "^3.2.3",
+    "config": "^3.3.2",
     "lodash": "^4.17.15"
   }
 }
