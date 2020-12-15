@@ -35,6 +35,7 @@
     "startSide": "START_SIDE",
     "socketUrl": "SOCKET_URL",
     "socketTopic": "SOCKET_TOPIC",
-    "premium": "PREMIUM"
+    "premium": "PREMIUM",
+    "leverage": "LEVERAGE"
   }
 }
