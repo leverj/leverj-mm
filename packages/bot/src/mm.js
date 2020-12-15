@@ -53,7 +53,7 @@ module.exports = (async function () {
   }
 
   function getMarginPerFraction(side, price) {
-    const maxLeverage = instrument().maxLeverage - 1
+    const maxLeverage = config.leverage || (instrument().maxLeverage - 1)
     const estimatedEntryPrice = side === 'buy' ? price : indexPrice ? Math.max(indexPrice, price) : price
     let baseSignificantDigits = instrument().baseSignificantDigits
     let decimals = instrument().quote.decimals
