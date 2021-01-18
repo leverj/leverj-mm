@@ -131,21 +131,21 @@ module.exports = (async function () {
 
   async function doCollarStrategy() {
     collarStrategy.setConfig(config)
-    setInterval(delayedRemoveAndAddOrders, 20000)
+    setInterval(delayedRemoveAndAddOrders, 2000)
   }
 
   function onTrade({instrument, price, side}) {
     if (instrument !== config.instrumentId) return
     setPriceAndSide(price, side)
-    if (isSpot)
-      delayedRemoveAndAddOrders(500)
+    // if (isSpot)
+      delayedRemoveAndAddOrders(50)
   }
 
   function onIndex({topic, price}) {
     if (!instrument().topic || topic !== instrument().topic) return console.log('Ignoring ', topic, price, instrument().topic)
     indexPrice = price
-    if (!isSpot)
-      delayedRemoveAndAddOrders(10)
+    // if (!isSpot)
+    //   delayedRemoveAndAddOrders(10)
   }
 
   function onExecution(accountExecution) {
