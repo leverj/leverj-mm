@@ -120,7 +120,7 @@ module.exports = (async function () {
 
   // EMA strategy
   async function doEMAStrategy() {
-    setInterval(function() {
+    setInterval(function () {
       const price = isSpot ? lastPrice : indexPrice
       ema = ema && price ? (price * emaMultiplier + ema * (1 - emaMultiplier)) : price
     }, 10000)
@@ -137,12 +137,15 @@ module.exports = (async function () {
   function onTrade({instrument, price, side}) {
     if (instrument !== config.instrumentId) return
     setPriceAndSide(price, side)
-    delayedRemoveAndAddOrders()
+    if (isSpot)
+      delayedRemoveAndAddOrders(500)
   }
 
   function onIndex({topic, price}) {
     if (!instrument().topic || topic !== instrument().topic) return console.log('Ignoring ', topic, price, instrument().topic)
     indexPrice = price
+    if (!isSpot)
+      delayedRemoveAndAddOrders(10)
   }
 
   function onExecution(accountExecution) {
@@ -152,11 +155,11 @@ module.exports = (async function () {
 
   let collarTimer
 
-  function delayedRemoveAndAddOrders() {
+  function delayedRemoveAndAddOrders(delay = 500) {
     try {
       if (config.strategy !== "COLLAR") return
       clearTimeout(collarTimer)
-      collarTimer = setTimeout(() => removeAndAddOrders().catch(logger.log), 500)
+      collarTimer = setTimeout(() => removeAndAddOrders().catch(logger.log), delay)
     } catch (e) {
       logger.log(e)
     }
@@ -228,8 +231,8 @@ module.exports = (async function () {
   }
 
   function onDiffOrderBook(difforderbook) {
-    if(difforderbook.instrument !== instrument().id) return
-    if(Date.now() < timestamp + 30000) return
+    if (difforderbook.instrument !== instrument().id) return
+    if (Date.now() < timestamp + 30000) return
     timestamp = Date.now()
     console.log('ema', ema, ', bid', difforderbook.bid, ', ask', difforderbook.ask, ', qty', config.quantity)
     if (!ema || config.strategy != 'EMA') return console.log('Returning ema:', ema, ', strategy:', config.strategy)
@@ -237,9 +240,9 @@ module.exports = (async function () {
   }
 
   function sendEMAOrders(difforderbook) {
-    const qty = config.quantity + ((Math.random()*config.quantity/10).toFixed(2) - 0)
+    const qty = config.quantity + ((Math.random() * config.quantity / 10).toFixed(2) - 0)
     let patch = []
-    if(Object.keys(orders).length > 0) patch.push({op: 'remove', value: Object.keys(orders)})
+    if (Object.keys(orders).length > 0) patch.push({op: 'remove', value: Object.keys(orders)})
     if (difforderbook.bid > ema) patch.push({op: 'add', value: [newOrder('sell', difforderbook.bid, qty)]})
     if (difforderbook.ask < ema) patch.push({op: 'add', value: [newOrder('buy', difforderbook.ask, qty)]})
     sendOrders(patch)
@@ -319,7 +322,7 @@ module.exports = (async function () {
     if (leverjConfig.maintenance || leverjConfig.tradingDisabled) return
     try {
       let bid = randomPrice(indexPrice || lastPrice, 1)
-      let ask = randomPrice(indexPrice || lastPrice , -1)
+      let ask = randomPrice(indexPrice || lastPrice, -1)
       let buy = newOrder('buy', applyRange(bid, config.priceRange), randomQty(config.quantity))
       let sell = newOrder('sell', applyRange(ask, config.priceRange), randomQty(config.quantity))
       zka.rest.post('/order', {}, [buy, sell]).catch(logger.log)
