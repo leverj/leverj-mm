@@ -35,7 +35,7 @@
     "publish:up": "lerna version $up --exact --git-tag-version --push --yes && lerna publish from-git --yes"
   },
   "devDependencies": {
-    "@leverj/test-utils": "1.5.14",
+    "@leverj/test-utils": "3.2.5",
     "del": "^6.0.0",
     "expect.js": "^0.3.1",
     "fixtures.js": "^2.1.0",
@@ -44,5 +44,10 @@
     "mock-require": "^3.0.3",
     "sinon": "^9.2.1",
     "yarn-all-workspaces": "^1.0.0"
+  },
+  "resolutions": {
+    "ini": "^1.3.8",
+    "node-fetch": "^2.6.1",
+    "dot-prop": "^4.2.1"
   }
 }
