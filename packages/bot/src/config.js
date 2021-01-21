@@ -32,6 +32,7 @@ module.exports = (function () {
     apiPath: _config.apiPath,
     socketPath: _config.socketPath,
     premium: (_config.premium || 0) - 0,
-    leverage: (_config.leverage || 0) - 0
+    leverage: (_config.leverage || 0) - 0,
+    collarRefreshRate: (_config.collarRefreshRate || 2) * 1000
   }
 })()
