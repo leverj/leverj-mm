@@ -47,9 +47,9 @@ module.exports = (async function () {
     strategy[config.strategy]()
   }
 
-  function newOrder(side, price, quantity) {
+  function newOrder(side, price, quantity, indexSanity) {
     console.log('Order:', side, price, quantity)
-    return isSpot ? spotOrder(side, price, quantity) : futuresOrder(side, price, quantity)
+    return isSpot ? spotOrder(side, price, quantity) : futuresOrder(side, price, quantity,indexSanity)
   }
 
   function getMarginPerFraction(side, price) {
@@ -60,7 +60,7 @@ module.exports = (async function () {
     return BigNumber(estimatedEntryPrice).shiftedBy(decimals - baseSignificantDigits).div(maxLeverage).integerValue().shiftedBy(baseSignificantDigits).toFixed()
   }
 
-  function futuresOrder(side, price, quantity) {
+  function futuresOrder(side, price, quantity, indexSanity) {
     if (price % instrument().tickSize !== 0) price = price - (price % instrument().tickSize) + instrument().tickSize
     let order = {
       accountId: config.accountId,
@@ -79,6 +79,7 @@ module.exports = (async function () {
       // clientOrderId: BigNumber(nodeUUID.v4().toString().split("-").join(''), 16).toFixed()
       clientOrderId: i++
     }
+    if(indexSanity) order.indexSanity = 0.01
     order.signature = orderAdaptor.sign(order, instrument(), config.secret)
     return order
   }
@@ -171,7 +172,7 @@ module.exports = (async function () {
     try {
       logger.log("removeAndAddOrders", {indexPrice, lastPrice, lastSide})
       let {toBeAdded, toBeRemoved} = getOrdersToBeAddedAndDeleted()
-      const newOrders = toBeAdded.filter(each => each.price > 0).map(each => newOrder(each.side, each.price, config.quantity))
+      const newOrders = toBeAdded.filter(each => each.price > 0).map(each => newOrder(each.side, each.price, config.quantity, true))
       let patch = []
       if (toBeRemoved.length) patch.push({op: 'remove', value: toBeRemoved.map(order => order.uuid)})
       if (newOrders.length) patch.push({op: 'add', value: newOrders})
