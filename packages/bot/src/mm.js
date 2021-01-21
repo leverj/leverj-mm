@@ -132,7 +132,7 @@ module.exports = (async function () {
 
   async function doCollarStrategy() {
     collarStrategy.setConfig(config)
-    setInterval(delayedRemoveAndAddOrders, 2000)
+    setInterval(delayedRemoveAndAddOrders, config.collarRefreshRate)
   }
 
   function onTrade({instrument, price, side}) {
@@ -174,10 +174,15 @@ module.exports = (async function () {
       let {toBeAdded, toBeRemoved} = getOrdersToBeAddedAndDeleted()
       const newOrders = toBeAdded.filter(each => each.price > 0).map(each => newOrder(each.side, each.price, config.quantity, true))
       let patch = []
+      const interleaveCount = Math.min(toBeRemoved.length, newOrders.length)
+      for (let j = 0; j < interleaveCount; j++) {
+        patch.push({op: 'remove', value: [toBeRemoved.pop().uuid]})
+        patch.push({op: 'add', value: [newOrders.pop()]})
+      }
       if (toBeRemoved.length) patch.push({op: 'remove', value: toBeRemoved.map(order => order.uuid)})
       if (newOrders.length) patch.push({op: 'add', value: newOrders})
       if (patch.length) {
-        logger.log("sending patch", "add", newOrders.map(order => order.price), "remove", toBeRemoved.map(order => order.uuid))
+        logPatchOrders(patch)
         zka.socket.send({method: "PATCH", uri: "/order", body: patch})
         // await zka.rest.patch("/order", {}, patch)
       }
@@ -187,6 +192,12 @@ module.exports = (async function () {
     collarWorking = false
   }
 
+  function logPatchOrders(patch){
+    logger.log("sending patch", patch.map(operation=> {
+      if(operation.op === "remove") return `remove : ${operation.value.join(',')}`
+      else return `add: ${operation.value.map(order=>`${order.side} ${order.price}`)}`
+    }))
+  }
   function sendOrders(patch) {
     if (patch && patch.length) {
       logger.log("sending patch", patch)
