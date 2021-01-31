@@ -172,7 +172,7 @@ module.exports = (async function () {
     try {
       logger.log("removeAndAddOrders", {indexPrice, lastPrice, lastSide})
       let {toBeAdded, toBeRemoved} = getOrdersToBeAddedAndDeleted()
-      const newOrders = toBeAdded.filter(each => each.price > 0).map(each => newOrder(each.side, each.price, config.quantity, true))
+      const newOrders = toBeAdded.filter(each => each.price > 0).map(each => newOrder(each.side, each.price, each.quantity, true))
       let patch = []
       const interleaveCount = Math.min(toBeRemoved.length, newOrders.length)
       for (let j = 0; j < interleaveCount; j++) {
