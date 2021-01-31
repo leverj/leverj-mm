@@ -97,7 +97,10 @@ module.exports = function () {
     const book = {}
     for (let i = 0; i < depth; i++) {
       let price = action(side)(StartPrice, sinful.mul(i, config.step));
-      book[price] = {side, price: price}
+      let qtyMultiplier = sinful.sub(config.depth, i)
+      let qtyDivisor = sinful.add(i, 1)
+      let quantity = sinful.div(sinful.mul(qtyMultiplier, config.quantity), qtyDivisor)
+      book[price] = {side, price: price, quantity: quantity}
     }
     return book
   }
