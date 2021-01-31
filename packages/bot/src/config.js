@@ -33,6 +33,7 @@ module.exports = (function () {
     socketPath: _config.socketPath,
     premium: (_config.premium || 0) - 0,
     leverage: (_config.leverage || 0) - 0,
-    collarRefreshRate: (_config.collarRefreshRate || 2) * 1000
+    collarRefreshRate: (_config.collarRefreshRate || 2) * 1000,
+    multiplyQty: (_config.multiplyQty)
   }
 })()

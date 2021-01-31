@@ -18,9 +18,9 @@ module.exports = function () {
 
   function toObj(buyPrices = [], sellPrices = []) {
     return buyPrices.map(price => {
-      return {price, side: "buy"}
+      return {price, side: "buy", quantity: config.quantity}
     }).concat(sellPrices.map(price => {
-      return {price, side: "sell"}
+      return {price, side: "sell", quantity: config.quantity}
     }))
   }
 
@@ -28,6 +28,8 @@ module.exports = function () {
     depth: 3,
     step: 0.1,
     spread: 0.4,
+    quantity: 1,
+    multiplyQty: false
   }
 
   const tests = [
