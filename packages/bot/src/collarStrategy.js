@@ -100,7 +100,12 @@ module.exports = function () {
       let qtyMultiplier = sinful.sub(config.depth, i)
       let qtyDivisor = sinful.add(i, 1)
       let quantity = sinful.div(sinful.mul(qtyMultiplier, config.quantity), qtyDivisor)
-      book[price] = {side, price: price, quantity: quantity}
+      if(config.multiplyQty){
+        book[price] = {side, price: price, quantity: quantity}
+      } else {
+        book[price] = {side, price: price, quantity: config.quantity}
+      }
+
     }
     return book
   }
