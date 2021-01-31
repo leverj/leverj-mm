@@ -17,7 +17,8 @@
     "startSide": "START_SIDE",
     "socketUrl": "SOCKET_URL",
     "socketTopic": "SOCKET_TOPIC",
-    "collarRefreshRate": "COLLAR_REFRESH_RATE"
+    "collarRefreshRate": "COLLAR_REFRESH_RATE",
+    "multiplyQty": "MULTIPLY_QTY"
   },
   "futures": {
     "strategy": "STRATEGY",
@@ -38,6 +39,7 @@
     "socketTopic": "SOCKET_TOPIC",
     "premium": "PREMIUM",
     "leverage": "LEVERAGE",
-    "collarRefreshRate": "COLLAR_REFRESH_RATE"
+    "collarRefreshRate": "COLLAR_REFRESH_RATE",
+    "multiplyQty": "MULTIPLY_QTY"
   }
 }
