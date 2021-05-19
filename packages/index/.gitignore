@@ -1,9 +1,0 @@
-
-# Dependency directories
-node_modules
-
-#webstorm
-.idea
-
-artifacts
-dist
