@@ -1,5 +1,5 @@
 const fs = require('fs')
-const affirm = require('affirm.js')
+const {affirm} = require('@leverj/affirm')
 const config = require('config')
 module.exports = (function () {
   const secretPath = process.argv[2]

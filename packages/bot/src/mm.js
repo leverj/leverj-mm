@@ -19,7 +19,8 @@ module.exports = (async function () {
   let orders = {}
   let ema
   let timestamp = Date.now()
-
+  let availableBalanceRatio = undefined
+  let positionSize = undefined
   const emaMultiplier = 2 / (10 + 1)
   const isSpot = config.app === 'spot'
   const strategy = {
@@ -38,6 +39,10 @@ module.exports = (async function () {
     leverjConfig = allConfig.config
     instruments = allConfig.instruments
     const allOrders = await zka.rest.get("/order")
+    const positions = await zka.rest.get("/account/position")
+    const filteredPositions = positions.filter(position=> position.instrument === config.instrumentId)
+    if(filteredPositions.length) onPosition(filteredPositions[0])
+    onAccountBalance(await zka.rest.get("/account/balance"))
     allOrders.forEach(order => {
       if (order.instrument === config.instrumentId)
         orders[order.uuid] = order
@@ -49,7 +54,7 @@ module.exports = (async function () {
 
   function newOrder(side, price, quantity, indexSanity) {
     console.log('Order:', side, price, quantity)
-    return isSpot ? spotOrder(side, price, quantity) : futuresOrder(side, price, quantity,indexSanity)
+    return isSpot ? spotOrder(side, price, quantity) : futuresOrder(side, price, quantity, indexSanity)
   }
 
   function getMarginPerFraction(side, price) {
@@ -60,8 +65,13 @@ module.exports = (async function () {
     return BigNumber(estimatedEntryPrice).shiftedBy(decimals - baseSignificantDigits).div(maxLeverage).integerValue().shiftedBy(baseSignificantDigits).toFixed()
   }
 
+  function isIncreasingPosition(side){
+    return (side === 'buy' && positionSize > 0) || (side === 'sell' && positionSize < 0)
+  }
+
   function futuresOrder(side, price, quantity, indexSanity) {
     if (price % instrument().tickSize !== 0) price = price - (price % instrument().tickSize) + instrument().tickSize
+    if (isIncreasingPosition(side) && availableBalanceRatio <= 0.5) quantity = quantity * availableBalanceRatio
     let order = {
       accountId: config.accountId,
       originator: config.apiKey,
@@ -79,7 +89,7 @@ module.exports = (async function () {
       // clientOrderId: BigNumber(nodeUUID.v4().toString().split("-").join(''), 16).toFixed()
       clientOrderId: i++
     }
-    if(indexSanity) order.indexSanity = 0.01
+    if (indexSanity) order.indexSanity = 0.01
     order.signature = orderAdaptor.sign(order, instrument(), config.secret)
     return order
   }
@@ -139,7 +149,7 @@ module.exports = (async function () {
     if (instrument !== config.instrumentId) return
     setPriceAndSide(price, side)
     // if (isSpot)
-      delayedRemoveAndAddOrders(50)
+    delayedRemoveAndAddOrders(50)
   }
 
   function onIndex({topic, price}) {
@@ -192,12 +202,13 @@ module.exports = (async function () {
     collarWorking = false
   }
 
-  function logPatchOrders(patch){
-    logger.log("sending patch", patch.map(operation=> {
-      if(operation.op === "remove") return `remove : ${operation.value.join(',')}`
-      else return `add: ${operation.value.map(order=>`${order.side} ${order.price}`)}`
+  function logPatchOrders(patch) {
+    logger.log("sending patch", patch.map(operation => {
+      if (operation.op === "remove") return `remove : ${operation.value.join(',')}`
+      else return `add: ${operation.value.map(order => `${order.side} ${order.price}`)}`
     }))
   }
+
   function sendOrders(patch) {
     if (patch && patch.length) {
       logger.log("sending patch", patch)
@@ -229,6 +240,8 @@ module.exports = (async function () {
       order_del: onOrderDel,
       order_patch: onOrderPatch,
       account: myMessageReceived,
+      account_balance: onAccountBalance,
+      position: onPosition,
       server_time: onNtp,
       instruments: updateInstruments,
       order_execution: onExecution,
@@ -307,6 +320,19 @@ module.exports = (async function () {
   function myMessageReceived(data) {
     if (!data.accountDetails || !data.accountDetails.orders) return
     orders = data.accountDetails.orders[config.instrumentId]
+  }
+
+  function onAccountBalance(balances) {
+    const balance = balances[instrument().quote.address]
+    if (!balance) return
+    availableBalanceRatio = new BigNumber(balance.available).div(balance.plasma).toNumber()
+    // console.log("#".repeat(50), 'availableBalanceRatio', availableBalanceRatio)
+  }
+
+  function onPosition(position) {
+    if (position.instrument !== instrument().id) return
+    positionSize = parseFloat(position.size)
+    // console.log("#".repeat(50), 'positionSize', positionSize)
   }
 
   function onNtp(data) {
